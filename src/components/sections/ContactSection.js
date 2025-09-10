@@ -6,7 +6,7 @@ const ContactSection = () => (
   <section id="contact" className="py-32 px-6 bg-white">
     <div className="max-w-4xl mx-auto text-center">
       <h2 className="custom-font text-5xl font-bold mb-8">
-        <span className="text-gray-900">Let's</span>
+        <span className="text-gray-900">Let&apos;s</span>
         <span className="text-cyan-600"> Connect</span>
       </h2>
       <p className="coolvetica-font text-xl text-gray-600 mb-16 max-w-2xl mx-auto">

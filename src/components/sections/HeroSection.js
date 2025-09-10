@@ -109,7 +109,7 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
             Welcome!
             <br />
             <span className="text-gray-600 italic">
-              I'm an undergraduate student at the University of Maryland, currently studying
+              I&apos;m an undergraduate student at the University of Maryland, currently studying
               computer science and finance.
             </span>
           </p>
