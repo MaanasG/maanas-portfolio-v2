@@ -1,9 +1,8 @@
 // src/app/components/sections/musicSection.js
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Music, ExternalLink, Calendar, Headphones, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Music, ExternalLink, Calendar, Headphones, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { spotifyTrackConfig, DEFAULT_ROLE } from '../../data/spotifyTracks';
-import WaveformVisualization from '../common/WaveformVisualization';
 
 const SpotifyIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -98,15 +97,7 @@ if (typeof document !== 'undefined') {
   }
 }
 
-const MusicSection = ({
-  tracks,
-  isPlaying,
-  isMuted,
-  currentTrack,
-  setCurrentTrack,
-  toggleMusic,
-  toggleMute,
-}) => {
+const MusicSection = () => {
   const [credits, setCredits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiSource, setApiSource] = useState('unknown');
@@ -208,7 +199,7 @@ const MusicSection = ({
             customGenre: config.customGenre,
             spotifyUrl: config.source === 'spotify' ? config.url : undefined,
             url: config.source === 'soundcloud' ? config.url : undefined,
-            youtubeUrl: config.youtubeUrl, // <-- add this
+            youtubeUrl: config.youtubeUrl,
             description: config.description,
             imageUrl: config.imageUrl || `https://images.unsplash.com/photo-${1493225457124 + index}?w=400&h=400&fit=crop`,
             year: config.year || '2024',
@@ -313,17 +304,6 @@ const MusicSection = ({
       document.removeEventListener('touchend', handleGlobalTouchEnd);
     };
   }, [isDragging, startX, startPosition]);
-
-  useEffect(() => {
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      if (momentumAnimationRef.current) {
-        cancelAnimationFrame(momentumAnimationRef.current);
-      }
-    };
-  }, []);
 
   const formatStreams = (plays) => {
     if (!plays || plays === 'N/A') return null;
@@ -550,8 +530,6 @@ const MusicSection = ({
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             className="bg-green-600 hover:bg-green-700 !text-white visited:!text-white hover:!text-white focus:!text-white no-underline px-3 py-2 rounded-lg text-sm flex items-center justify-center transition-colors"
-                            // fallback if Tailwind ! isn't available:
-                            // style={{ color: '#fff', textDecoration: 'none' }}
                           >
                             <ExternalLink className="w-4 h-4 mr-1 text-white" />
                             Spotify
@@ -621,85 +599,6 @@ const MusicSection = ({
             </p>
           </div>
         )}
-
-        {/* Music Player Interface */}
-        {tracks && tracks.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-lg mt-8">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
-                  <Music className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-black">Now Playing</h3>
-                  <p className="text-gray-600">Audio Player</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={toggleMute}
-                  className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors text-black"
-                >
-                  {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-                </button>
-                <button 
-                  onClick={toggleMusic}
-                  className="p-3 rounded-full bg-black hover:bg-gray-800 transition-colors text-white"
-                >
-                  {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Track List */}
-            <div className="space-y-4">
-              {tracks.map((track, index) => (
-                <div 
-                  key={index}
-                  className={`flex items-center gap-6 p-4 rounded-2xl transition-all duration-300 cursor-pointer ${
-                    currentTrack === index 
-                      ? 'bg-gray-100 border border-gray-300' 
-                      : 'hover:bg-gray-50'
-                  }`}
-                  onClick={() => setCurrentTrack(index)}
-                >
-                  <div className="w-16 h-16 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Music className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  <div className="flex-grow">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h4 className="font-semibold text-black">{track.title}</h4>
-                        <p className="text-gray-600 text-sm">{track.artist}</p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm text-gray-600">{track.duration}</div>
-                        {track.plays && formatStreams(track.plays) && (
-                          <div className="text-xs text-gray-500">{formatStreams(track.plays)}</div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs text-gray-700 bg-gray-100 px-2 py-1 rounded">
-                        {track.genre}
-                      </span>
-                      <div className="flex-grow">
-                        <WaveformVisualization 
-                          waveform={track.waveform} 
-                          isActive={currentTrack === index && isPlaying}
-                          color="black"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Vinyl Details Modal */}
@@ -750,7 +649,7 @@ const MusicSection = ({
                 </div>
               </div>
 
-                            {/* Track Details - Sliding Panel */}
+              {/* Track Details - Sliding Panel */}
               <div className="lg:w-1/2 p-8 overflow-y-auto animate-slideInRight">
                 {/* Navigation */}
                 <div className="flex items-center justify-between mb-6">
@@ -766,7 +665,7 @@ const MusicSection = ({
                       onClick={() => navigateTrack('next')}
                       className="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
                     >
-                      <ChevronLeft className="w-5 h-5 text-black" />
+                      <ChevronRight className="w-5 h-5 text-black" />
                     </button>
 
                     <span className="text-gray-600 text-sm ml-2">

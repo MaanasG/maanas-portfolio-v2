@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { usePortfolio } from '../hooks/usePortfolio';
 import CustomStyles from './common/CustomStyles';
 import Navigation from './sections/Navigation';
@@ -15,6 +15,7 @@ import Footer from './ui/Footer';
 import { experiences } from '../data/experiences';
 import { projects } from '../data/projects';
 import { tracks } from '../data/tracks';
+
 
 
 
@@ -34,6 +35,9 @@ const Portfolio = () => {
     toggleMusic,
     toggleMute
   } = usePortfolio();
+
+  const [audioElement, setAudioElement] = useState(null);
+  const [actuallyPlaying, setActuallyPlaying] = useState(false);
 
   const playTrack = (index) => {
     if (currentTrack !== index) {
@@ -56,12 +60,17 @@ const Portfolio = () => {
         scrollToSection={scrollToSection}
         toggleMusic={toggleMusic}
         isPlaying={isPlaying}
+        onAudioReady={setAudioElement} 
+        onPlayingStateChange={setActuallyPlaying}
       />
 
       <HeroSection 
         heroRef={heroRef}
         mousePosition={mousePosition}
         scrollToSection={scrollToSection}
+        audioElement={audioElement}    
+        isPlaying={actuallyPlaying}  
+        
       />
 
       {/* <AboutSection /> */}
