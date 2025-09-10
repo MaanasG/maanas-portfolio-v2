@@ -52,17 +52,28 @@ useEffect(() => {
     const scrollElement = scrollingTextRef.current;
     if (!scrollElement) return;
 
-    const text = scrollElement.textContent;
     const textWidth = scrollElement.scrollWidth;
-    const containerWidth = scrollElement.parentElement.offsetWidth;
-    
+    const container = scrollElement.parentElement;
+    const containerWidth = container.offsetWidth;
+
     if (textWidth > containerWidth) {
+      const extraSpace = 0; // wider travel space (px)
+      const distance = textWidth + containerWidth + extraSpace;
+      const speed = 40; // px per second
+      const duration = Math.max(distance / speed, 12); // adapt duration
+
       scrollElement.style.animation = 'none';
-      // reset
-      scrollElement.offsetHeight; 
-      scrollElement.style.animation = `scroll-text ${Math.max(text.length * 0.1, 8)}s linear infinite`;
+      scrollElement.offsetHeight; // trigger reflow
+      scrollElement.style.animation = `scroll-text ${duration}s linear infinite`;
+      scrollElement.style.paddingLeft = '0';
+      scrollElement.style.fontSize = '1.25rem'; // larger text
+    } else {
+      scrollElement.style.animation = 'none';
+      scrollElement.style.paddingLeft = '0';
+      scrollElement.style.fontSize = '1.25rem';
     }
   }, [currentTrack, isScrolled]);
+
 
     useEffect(() => {
       if (audio && onAudioReady) {
@@ -107,20 +118,25 @@ useEffect(() => {
     <>
       <style jsx>{`
         @keyframes scroll-text {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
+          0% { transform: translateX(100%); }   /* start just off right */
+          100% { transform: translateX(-100%); } /* fully exit left */
         }
-        
+
         .scrolling-container {
           overflow: hidden;
           white-space: nowrap;
+          width: 100%; /* make sure container is full width */
         }
-        
+
         .scrolling-text {
           display: inline-block;
-          padding-left: 100%;
+          padding-left: 0;
+          font-weight: 500; 
+          /* font-size is now handled dynamically in JS */
         }
+
       `}</style>
+
 
       <nav className={`coolvetica-font fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-gray-800' : 'bg-transparent'
@@ -142,7 +158,9 @@ useEffect(() => {
                   className={`capitalize font-medium transition-colors duration-200 relative ${
                     activeSection === section 
                       ? 'text-cyan-400' 
-                      : 'text-gray-400 hover:text-white'
+                      : isScrolled 
+                        ? 'text-gray-400 hover:text-white'
+                        : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   {section}
@@ -158,12 +176,14 @@ useEffect(() => {
                 <div className="scrolling-container w-full">
                   <div 
                     ref={scrollingTextRef}
-                    className="scrolling-text text-sm font-medium text-white truncate"
+                    className={`scrolling-text text-sm font-medium truncate ${
+                      isScrolled ? 'text-white' : 'text-[var(--almost-black)]'
+                    }`}
                   >
                     {currentTrack.title} • {currentTrack.artist}
                   </div>
                 </div>
-                <div className="text-xs text-gray-400">
+                <div className={`text-xs ${isScrolled ? 'text-gray-400' : 'text-gray-600'}`}>
                   {formatTime(currentTime)} / {currentTrack.duration}
                 </div>
               </div>
@@ -174,7 +194,7 @@ useEffect(() => {
                   onClick={prevTrack}
                   className="p-2 rounded-full bg-gray-800/50 border border-gray-700/50 hover:bg-gray-700/50 transition-colors"
                 >
-                  <SkipBack className="w-4 h-4 text-gray-300" />
+                  <SkipBack className={`w-4 h-4 ${isScrolled ? 'text-gray-300' : 'text-gray-700'}`} />
                 </button>
                 
                 <button
@@ -191,18 +211,18 @@ useEffect(() => {
                   onClick={nextTrack}
                   className="p-2 rounded-full bg-gray-800/50 border border-gray-700/50 hover:bg-gray-700/50 transition-colors"
                 >
-                  <SkipForward className="w-4 h-4 text-gray-300" />
+                  <SkipForward className={`w-4 h-4 ${isScrolled ? 'text-gray-300' : 'text-gray-700'}`} />
                 </button>
               </div>
 
               {/* Volume Control (Visual Only) */}
               <button className="p-2 rounded-full bg-gray-800/50 border border-gray-700/50 hover:bg-gray-700/50 transition-colors">
-                <Volume2 className="w-4 h-4 text-gray-300" />
+                <Volume2 className={`w-4 h-4 ${isScrolled ? 'text-gray-300' : 'text-gray-700'}`} />
               </button>
             </div>
 
             <button
-              className="md:hidden text-white"
+              className={`md:hidden ${isScrolled ? 'text-white' : 'text-[var(--almost-black)]'}`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X /> : <Menu />}
@@ -223,11 +243,13 @@ useEffect(() => {
           <div className="md:hidden flex items-center justify-between pb-4">
             <div className="flex flex-col min-w-0 flex-1">
               <div className="scrolling-container">
-                <div className="scrolling-text text-sm font-medium text-white truncate">
+                <div className={`scrolling-text text-sm font-medium truncate ${
+                  isScrolled ? 'text-white' : 'text-[var(--almost-black)]'
+                }`}>
                   {currentTrack.title} • {currentTrack.artist}
                 </div>
               </div>
-              <div className="text-xs text-gray-400">
+              <div className={`text-xs ${isScrolled ? 'text-gray-400' : 'text-gray-600'}`}>
                 {formatTime(currentTime)} / {currentTrack.duration}
               </div>
             </div>
@@ -237,7 +259,7 @@ useEffect(() => {
                 onClick={prevTrack}
                 className="p-2 rounded-full bg-gray-800/50 border border-gray-700/50"
               >
-                <SkipBack className="w-4 h-4 text-gray-300" />
+                <SkipBack className={`w-4 h-4 ${isScrolled ? 'text-gray-300' : 'text-gray-700'}`} />
               </button>
               
               <button
@@ -254,7 +276,7 @@ useEffect(() => {
                 onClick={nextTrack}
                 className="p-2 rounded-full bg-gray-800/50 border border-gray-700/50"
               >
-                <SkipForward className="w-4 h-4 text-gray-300" />
+                <SkipForward className={`w-4 h-4 ${isScrolled ? 'text-gray-300' : 'text-gray-700'}`} />
               </button>
             </div>
           </div>

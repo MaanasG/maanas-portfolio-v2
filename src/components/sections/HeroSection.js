@@ -13,15 +13,12 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
       }
     };
 
-    // Initial measure
     measure();
 
-    // Re-measure after fonts load (important for first render accuracy)
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(measure);
     }
 
-    // Re-measure on resize
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, []);
@@ -42,11 +39,11 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
             <div
               style={{
                 position: "absolute",
-                bottom: "100%", // sits right above MAANAS
+                bottom: "100%", 
                 left: 0,
                 width: `${maanasWidth*1.43}px`,
                 height: "150px",
-                transform: "translate(-205px, 10px)", // tweak vertical alignment
+                transform: "translate(-205px, 10px)", 
               }}
             >
               <AudioSpectralizer audioElement={audioElement} isPlaying={isPlaying} />
@@ -119,7 +116,7 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
 
           <div className="coolvetica-font flex gap-3 justify-end">
             <a
-              href="#"
+              href="./Maanas_Gopi_Resume.pdf"
               className="px-6 py-2 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-sm uppercase tracking-wide"
             >
               Resume

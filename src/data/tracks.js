@@ -1,4 +1,13 @@
 export const tracks = [
+      {
+      title: "RUN IT BY ME 100 1MAINS RGHVARCHIVE",
+      artist: "@1mains, @rghvarchive", 
+      duration: "3:15",
+      genre: "RnB",
+      plays: "15.2K",
+      waveform: [0.2, 0.4, 0.7, 0.8, 0.5, 0.6, 0.9, 0.3, 0.7, 0.5, 0.8, 0.4, 0.6, 0.7, 0.3, 0.8],
+      link: "/audio/RUN IT BY ME 100 1MAINS RGHVARCHIVE (RNB).mp3"
+    },
     {
       title: "REDWOOD 125 ELI.YF SYN.JAS MAINS",
       artist: "@1mains, @eli.yf, @syn.jas",
@@ -10,7 +19,7 @@ export const tracks = [
     },
     {
       title: "COLD 144 1MAINS ELIYF SAAHIL",
-      artist: "@mains, @eli.yf, @saahil",
+      artist: "@1mains, @eli.yf, @saahil",
       duration: "2:26",
       genre: "Virtual, Hip Hop",
       plays: "8.7K",
@@ -19,7 +28,7 @@ export const tracks = [
     },
     {
       title: "WENT WRONG 175 MAINS AMOGHHH",
-      artist: "@mains, @amoghhh", 
+      artist: "@1mains, @amoghhh", 
       duration: "2:12",
       genre: "Jerk, Sampled",
       plays: "15.2K",

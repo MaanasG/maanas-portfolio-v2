@@ -7,6 +7,7 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
   const audioContextRef = useRef();
   const sourceRef = useRef();
   const [isInitialized, setIsInitialized] = useState(false);
+  const [showNudge, setShowNudge] = useState(true);
 
   useEffect(() => {
     if (sourceRef.current) {
@@ -14,6 +15,28 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
       setIsInitialized(false);
     }
   }, [audioElement]);
+
+  useEffect(() => {
+    // Show nudge after 3 seconds on startup if not playing
+    const startupTimer = setTimeout(() => {
+      if (!isPlaying) {
+        setShowNudge(true);
+      }
+    }, 3000);
+
+    return () => clearTimeout(startupTimer);
+  }, []);
+
+  useEffect(() => {
+    // Hide nudge when audio starts playing
+    if (isPlaying) {
+      setShowNudge(false);
+    } else {
+      // Show nudge again after a delay when audio stops
+      const timer = setTimeout(() => setShowNudge(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isPlaying]);
 
   useEffect(() => {
     if (!audioElement) return;
@@ -104,7 +127,6 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    // Helper: draw rounded rects
     const drawRoundedRect = (ctx, x, y, width, height, radius) => {
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
@@ -189,15 +211,31 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
   }, [isInitialized, isPlaying]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{
-        zIndex: 20,
-        opacity: 1,
-        mixBlendMode: "normal",
-      }}
-    />
+    <div className="relative w-full h-full">
+      <div 
+        className={`custom-font absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-500 ease-in-out ${
+          showNudge && !isPlaying 
+            ? 'opacity-100 translate-y-0' 
+            : 'opacity-0 translate-y-2'
+        }`}
+      >
+        <div className="px-3 py-1.5">
+          <p className="text-black/80 text-xs font-medium tracking-wide">
+            <span className="inline-block animate-pulse mr-1">▶</span> Hit play to see the visualizer in action
+          </p>
+        </div>
+      </div>
+      
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out"
+        style={{
+          zIndex: 20,
+          opacity: isPlaying ? 1 : 0,
+          mixBlendMode: "normal",
+        }}
+      />
+    </div>
   );
 };
 

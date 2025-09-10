@@ -241,7 +241,7 @@ const MusicSection = () => {
     if (!isDragging) return;
     
     const deltaX = clientX - startX;
-    const sensitivity = 0.5; // Adjust sensitivity
+    const sensitivity = 0.5; 
     const newPosition = startPosition + (deltaX * sensitivity);
     
     setTrackPosition(newPosition);
