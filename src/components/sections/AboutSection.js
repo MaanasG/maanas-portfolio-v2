@@ -16,7 +16,7 @@ const AboutSection = () => {
                 Whats up!
               </p>
               <p>
-                I'm a Computer Science student at the University of Maryland,
+                I&apos;m a Computer Science student at the University of Maryland,
                 passionate about building scalable software solutions and exploring
                 the intersection of technology and creativity.
               </p>

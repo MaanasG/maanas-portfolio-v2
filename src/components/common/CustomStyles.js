@@ -1,4 +1,6 @@
 // src/components/common/CustomStyles.js
+"use client";
+
 import React from 'react';
 
 const CustomStyles = () => {
