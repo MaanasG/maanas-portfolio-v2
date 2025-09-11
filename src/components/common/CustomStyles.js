@@ -44,7 +44,7 @@ const CustomStyles = () => {
 
       @font-face {
         font-family: 'Coolvetica';
-        src: url('/fonts/Coolvetica Rg.otf') format('opentype');
+        src: url('/fonts/Coolvetica-Rg.otf') format('opentype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
