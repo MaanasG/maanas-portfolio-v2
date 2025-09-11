@@ -38,7 +38,7 @@ const CustomStyles = () => {
       /* === Font Faces === */
       @font-face {
         font-family: 'ABEAKRG';
-        src: url('/fonts/ABEAKRG.ttf') format('truetype');
+        src: url('/fonts/ABEAKRG.TTF') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
