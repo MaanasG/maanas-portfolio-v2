@@ -5,7 +5,6 @@ import { usePortfolio } from '../hooks/usePortfolio';
 import CustomStyles from './common/CustomStyles';
 import Navigation from './sections/Navigation';
 import HeroSection from './sections/HeroSection';
-import AboutSection from './sections/AboutSection';
 import ExperienceSection from './sections/ExperienceSection';
 import ProjectsSection from './sections/ProjectsSection';
 import MusicSection from './sections/MusicSection';
