@@ -23,6 +23,11 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
     return () => window.removeEventListener("resize", measure);
   }, []);
 
+  // Use the exact width of the "MAANAS" text for the spectralizer
+  const getSpectralizerWidth = () => {
+    return maanasWidth || 400; // fallback width while measuring
+  };
+
   return (
     <section
       id="home"
@@ -31,19 +36,18 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
     >
       <div className="h-16 w-full"></div>
 
-      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-2 relative">
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 relative">
         <div className="flex items-end relative z-10">
           {/* Text + spectralizer */}
           <div className="relative flex flex-col text-right leading-none">
-            {/* Spectralizer absolutely positioned above MAANAS */}
             <div
               style={{
                 position: "absolute",
                 bottom: "100%", 
-                left: 0,
-                width: `${maanasWidth*1.43}px`,
+                right: 0, 
+                width: `${getSpectralizerWidth()}px`,
                 height: "150px",
-                transform: "translate(-205px, 10px)", 
+                transform: "translateY(10px)", 
               }}
             >
               <AudioSpectralizer audioElement={audioElement} isPlaying={isPlaying} />
@@ -89,23 +93,23 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
           </div>
         </div>
 
-        {/* Bottom icons */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
-          <div className="flex items-center gap-2 text-sm text-gray-700 uppercase tracking-wider">
-            <GraduationCap className="w-4 h-4" />
+        {/* Bottom icons - responsive positioning */}
+        <div className="absolute bottom-16 md:bottom-10 left-1/2 transform -translate-x-1/2 z-10">
+          <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-gray-700 uppercase tracking-wider">
+            <GraduationCap className="w-3 h-3 md:w-4 md:h-4" />
             <span>Student</span>
-            <span className="mx-2">•</span>
-            <Code className="w-4 h-4" />
+            <span className="mx-1 md:mx-2">•</span>
+            <Code className="w-3 h-3 md:w-4 md:h-4" />
             <span>Developer</span>
-            <span className="mx-2">•</span>
-            <Music className="w-4 h-4" />
+            <span className="mx-1 md:mx-2">•</span>
+            <Music className="w-3 h-3 md:w-4 md:h-4" />
             <span>Producer</span>
           </div>
         </div>
 
-        {/* Welcome text + links */}
-        <div className="absolute bottom-10 right-8 max-w-md text-right z-10">
-          <p className="coolvetica-font text-base md:text-lg text-gray-800 mb-2 leading-6">
+        {/* Welcome text*/}
+        <div className="absolute bottom-6 md:bottom-10 right-4 md:right-8 max-w-xs md:max-w-md text-right z-10">
+          <p className="coolvetica-font text-sm md:text-base lg:text-lg text-gray-800 mb-2 leading-5 md:leading-6">
             Welcome!
             <br />
             <span className="text-gray-600 italic">
@@ -114,16 +118,16 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
             </span>
           </p>
 
-          <div className="coolvetica-font flex gap-3 justify-end">
+          <div className="coolvetica-font flex gap-2 md:gap-3 justify-end">
             <a
               href="./Maanas_Gopi_Resume.pdf"
-              className="px-6 py-2 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-sm uppercase tracking-wide"
+              className="px-4 md:px-6 py-1.5 md:py-2 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-xs md:text-sm uppercase tracking-wide"
             >
               Resume
             </a>
             <a
               href="https://linkedin.com/in/maanas-gopi"
-              className="px-6 py-2 border border-gray-600 text-gray-900 rounded-full font-medium hover:border-gray-800 transition-colors text-sm uppercase tracking-wide"
+              className="px-4 md:px-6 py-1.5 md:py-2 border border-gray-600 text-gray-900 rounded-full font-medium hover:border-gray-800 transition-colors text-xs md:text-sm uppercase tracking-wide"
             >
               LinkedIn
             </a>
@@ -133,9 +137,9 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
         {/* Scroll button */}
         <button
           onClick={() => scrollToSection("about")}
-          className="absolute bottom-8 left-8 text-gray-600 hover:text-gray-900 transition-colors z-10"
+          className="absolute bottom-6 md:bottom-8 left-4 md:left-8 text-gray-600 hover:text-gray-900 transition-colors z-10"
         >
-          <ChevronDown className="w-6 h-6" />
+          <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
         </button>
       </div>
     </section>

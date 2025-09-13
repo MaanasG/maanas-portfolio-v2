@@ -144,13 +144,13 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
 
     const drawStaticBars = (ctx, width, height) => {
       const numBars = 48;
-      const spacing = (width * 0.7) / numBars;
+      const spacing = width / numBars; // Now uses full width
       const barWidth = spacing * 0.6;
       const baseY = height - 50;
       const maxBarHeight = height * 0.25;
 
       for (let i = 0; i < numBars; i++) {
-        const x = (i - numBars / 2) * spacing + width / 2;
+        const x = i * spacing + spacing / 2; // Center each bar in its section
         const barHeight = maxBarHeight * 0.05;
 
         ctx.fillStyle = "rgba(0,0,0,0.6)";
@@ -167,7 +167,7 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
 
     const drawFrequencyBars = (ctx, dataArray, width, height) => {
       const numBars = 64;
-      const spacing = (width * 0.7) / numBars;
+      const spacing = width / numBars; // Now uses full width
       const barWidth = spacing * 0.6;
       const baseY = height - 20;
       const maxBarHeight = height * 0.4;
@@ -181,7 +181,7 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
           ((value / 255) ** 0.8) * maxBarHeight * sensitivityBoost
         );
 
-        const x = (i - numBars / 2) * spacing + width / 2;
+        const x = i * spacing + spacing / 2; // Center each bar in its section
 
         ctx.fillStyle = "rgba(0,0,0,0.8)";
         ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
