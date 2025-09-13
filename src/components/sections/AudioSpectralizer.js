@@ -9,6 +9,8 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [showNudge, setShowNudge] = useState(true);
 
+  const previousHeightsRef = useRef([]); 
+
   useEffect(() => {
     if (sourceRef.current) {
       sourceRef.current = null;
@@ -17,7 +19,6 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
   }, [audioElement]);
 
   useEffect(() => {
-    // Show nudge after 3 seconds on startup if not playing
     const startupTimer = setTimeout(() => {
       if (!isPlaying) {
         setShowNudge(true);
@@ -28,11 +29,9 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
   }, []);
 
   useEffect(() => {
-    // Hide nudge when audio starts playing
     if (isPlaying) {
       setShowNudge(false);
     } else {
-      // Show nudge again after a delay when audio stops
       const timer = setTimeout(() => setShowNudge(true), 2000);
       return () => clearTimeout(timer);
     }
@@ -102,6 +101,73 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
+    const drawRoundedRect = (ctx, x, y, width, height, radius) => {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + width - r, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+      ctx.lineTo(x + width, y + height - r);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+      ctx.lineTo(x + r, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      ctx.fill();
+    };
+
+
+    const drawBars = (ctx, dataArray, width, height, isActive) => {
+      const numBars = 64;
+      const spacing = width / numBars;
+      const barWidth = spacing * 0.6;
+      const baseY = height - 20;
+      const maxBarHeight = height * 0.4;
+
+      if (!previousHeightsRef.current.length) {
+        previousHeightsRef.current = new Array(numBars).fill(3);
+      }
+
+      const decayRate = 4; 
+      const sensitivityBoost = 2;
+
+      for (let i = 0; i < numBars; i++) {
+        let targetHeight = previousHeightsRef.current[i];
+
+        if (isActive) {
+          const value = dataArray[i];
+          targetHeight = Math.max(
+            3,
+            ((value / 255) ** 0.8) * maxBarHeight * sensitivityBoost
+          );
+        } else {
+          targetHeight = Math.max(3, targetHeight - decayRate);
+        }
+
+        const smoothedHeight =
+          previousHeightsRef.current[i] * 0.6 + targetHeight * 0.4;
+        previousHeightsRef.current[i] = smoothedHeight;
+
+        const x = Math.round(i * spacing + spacing / 2);
+        const y = Math.round(baseY - smoothedHeight);
+        const w = Math.round(barWidth);
+        const h = Math.round(smoothedHeight);
+
+        ctx.shadowColor = "rgba(0,0,0,0.15)";
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 2;
+
+        ctx.fillStyle = "rgba(0,0,0,0.8)";
+        drawRoundedRect(ctx, x - w / 2, y, w, h, 6);
+      }
+
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+    };
+
+
     const animate = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width;
@@ -111,7 +177,6 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
 
       if (
         isInitialized &&
-        isPlaying &&
         analyserRef.current &&
         audioContextRef.current?.state === "running"
       ) {
@@ -119,85 +184,12 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
         const dataArray = new Uint8Array(bufferLength);
         analyserRef.current.getByteFrequencyData(dataArray);
 
-        drawFrequencyBars(ctx, dataArray, width, height);
+        drawBars(ctx, dataArray, width, height, isPlaying);
       } else {
-        drawStaticBars(ctx, width, height);
+        drawBars(ctx, [], width, height, false);
       }
 
       animationRef.current = requestAnimationFrame(animate);
-    };
-
-    const drawRoundedRect = (ctx, x, y, width, height, radius) => {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-      ctx.fill();
-    };
-
-    const drawStaticBars = (ctx, width, height) => {
-      const numBars = 48;
-      const spacing = width / numBars; // Now uses full width
-      const barWidth = spacing * 0.6;
-      const baseY = height - 50;
-      const maxBarHeight = height * 0.25;
-
-      for (let i = 0; i < numBars; i++) {
-        const x = i * spacing + spacing / 2; // Center each bar in its section
-        const barHeight = maxBarHeight * 0.05;
-
-        ctx.fillStyle = "rgba(0,0,0,0.6)";
-        drawRoundedRect(
-          ctx,
-          x - barWidth / 2,
-          baseY - barHeight,
-          barWidth,
-          barHeight,
-          4 
-        );
-      }
-    };
-
-    const drawFrequencyBars = (ctx, dataArray, width, height) => {
-      const numBars = 64;
-      const spacing = width / numBars; // Now uses full width
-      const barWidth = spacing * 0.6;
-      const baseY = height - 20;
-      const maxBarHeight = height * 0.4;
-
-      for (let i = 0; i < numBars; i++) {
-        const value = dataArray[i];
-
-        const sensitivityBoost = 2;
-        const barHeight = Math.max(
-          3,
-          ((value / 255) ** 0.8) * maxBarHeight * sensitivityBoost
-        );
-
-        const x = i * spacing + spacing / 2; // Center each bar in its section
-
-        ctx.fillStyle = "rgba(0,0,0,0.8)";
-        ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
-        ctx.shadowBlur = value > 160 ? 12 : 6;
-
-        drawRoundedRect(
-          ctx,
-          x - barWidth / 2,
-          baseY - barHeight,
-          barWidth,
-          barHeight,
-          6 
-        );
-
-        ctx.shadowBlur = 0;
-      }
     };
 
     animate();
@@ -211,21 +203,7 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
   }, [isInitialized, isPlaying]);
 
   return (
-    <div className="relative w-full h-full">
-      <div 
-        className={`custom-font absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-500 ease-in-out ${
-          showNudge && !isPlaying 
-            ? 'opacity-100 translate-y-0' 
-            : 'opacity-0 translate-y-2'
-        }`}
-      >
-        <div className="px-3 py-1.5">
-          <p className="text-black/80 text-xs font-medium tracking-wide">
-            <span className="inline-block animate-pulse mr-1">▶</span> Hit play to see the visualizer in action
-          </p>
-        </div>
-      </div>
-      
+    <div className="relative w-full h-full flex items-center justify-center">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-700 ease-in-out"
@@ -235,6 +213,21 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
           mixBlendMode: "normal",
         }}
       />
+
+      {/* Nudge */}
+      <div
+        className={`custom-font z-30 pointer-events-none transition-all duration-500 ease-in-out
+          ${showNudge && !isPlaying ? "opacity-100 translate-y-12" : "opacity-0 translate-y-2"}
+          sm:absolute sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2
+        `}
+      >
+        <div className="px-3 py-1.5">
+          <p className="text-black/80 text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap text-center">
+            <span className="inline-block animate-pulse mr-1">▶</span>
+            Hit play to see the visualizer in action
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
