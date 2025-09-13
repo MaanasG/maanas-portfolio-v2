@@ -56,9 +56,11 @@ const Navigation = ({
   useEffect(() => {
     if (audio && currentTrack) {
       audio.src = currentTrack.link;
-      audio.load();
-      setIsPlaying(false);
       setCurrentTime(0);
+
+      // audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+
+      setIsPlaying(false);
     }
   }, [currentTrackIndex, audio, currentTrack]);
 
@@ -91,10 +93,16 @@ const Navigation = ({
   const toggleMusic = () => {
     if (!audio) return;
     const newPlayingState = !isPlaying;
-    if (newPlayingState) audio.play().catch((e) => console.error(e));
-    else audio.pause();
-    setIsPlaying(newPlayingState);
-    onPlayingStateChange && onPlayingStateChange(newPlayingState);
+    if (newPlayingState) {
+      audio.play().then(() => {
+        setIsPlaying(true);
+        onPlayingStateChange && onPlayingStateChange(true);
+      }).catch((e) => console.error("Playback error:", e));
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+      onPlayingStateChange && onPlayingStateChange(false);
+    }
   };
 
   const nextTrack = () => {
