@@ -21,6 +21,17 @@ export const projects = [
       category: "web",
       video: "/videos/adaptivegto.mp4"
     },
+      {
+      title: "Personal Portfolio Site",
+      period: "Aug. 2025 — Present", 
+      description: "Personal portfolio site, showcasing previous job experience, projects, and other past work",
+      impact: "Looks pretty cool (I hope)",
+      tech: ["Next.JS", "JavaScript", "HTML/CSS", "Spotify API", "Muso.AI API"],
+      github: "https://github.com/MaanasG/maanas-portfolio-v2",
+      demo: "#",
+      category: "web",
+      video: "/videos/maanasportfolio.mp4"
+    },
     {
       title: "Employee Registry Database",
       period: "May 2024 — Sep. 2024",
