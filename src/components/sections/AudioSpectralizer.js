@@ -26,7 +26,7 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
     }, 3000);
 
     return () => clearTimeout(startupTimer);
-  }, []);
+  }, [isPlaying]);
 
   useEffect(() => {
     if (isPlaying) {
