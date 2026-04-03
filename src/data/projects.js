@@ -5,6 +5,7 @@ export const projects = [
       description: " AI-powered sound design tool for music producers that takes user audio samples and natural language descriptors to generate transformed sounds.",
       impact: "7M+ collective views",
       tech: ["Python", "PyTorch", "Librosa"],
+      github: "https://github.com/MaanasG/textaudiomvp",
       demo: "https://mains.live/",
       category: "automation",
       video: "/videos/1mainsaudio.mp4" 
