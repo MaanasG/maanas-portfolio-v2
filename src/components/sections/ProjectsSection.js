@@ -2,13 +2,19 @@ import React from "react";
 import ProjectCard from "../cards/ProjectCard";
 
 const ProjectsSection = ({ projects: projectsList }) => (
-  <section id="projects" className="py-8 px-4 sm:px-6 bg-[var(--almost-black)]">
-    <div className="max-w-4xl mx-auto">
-      <h2 className="custom-font text-xl sm:text-2xl font-bold mb-5 text-center text-[var(--off-white)]">
-        Featured <span className="text-amber-500">Projects</span>
-      </h2>
+  <section id="projects" className="px-4 sm:px-6 py-7 sm:py-8">
+    <div className="reading-container">
+      <div className="section-title-block mb-4">
+        <div className="kicker mb-2">Selected work</div>
+        <h2 className="section-heading section-heading-masthead text-2xl sm:text-3xl">
+          Projects
+        </h2>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div
+        className="divide-y"
+        style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
+      >
         {projectsList.map((project, index) => (
           <ProjectCard key={index} project={project} />
         ))}

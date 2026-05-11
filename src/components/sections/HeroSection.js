@@ -34,23 +34,25 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
     <section
       id="home"
       ref={heroRef}
-      className="min-h-[52vh] max-h-[560px] bg-[var(--almost-black)] relative overflow-hidden"
+      className="min-h-[52vh] max-h-[620px] relative overflow-x-hidden overflow-y-visible"
+      style={{
+        background: "transparent",
+        borderBottom: "1px solid var(--border)",
+      }}
     >
       {/* Offset content below the fixed navigation bar */}
       <div className="h-20 w-full"></div>
 
-      <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[calc(52vh-5rem)] max-h-[calc(560px-5rem)] px-4 sm:px-6 relative py-4">
+      <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[calc(52vh-5rem)] max-h-[calc(620px-5rem)] px-4 sm:px-6 relative py-6 sm:py-8">
         <div className="flex flex-col items-center relative z-10">
-          {/* Waveform — width matches MAANAS; sits slightly above the headline */}
+          {/* Waveform: in-flow so it never tucks under the fixed nav when resizing */}
           <div className="flex items-end">
-            <div className="relative flex flex-col text-right leading-none">
+            <div className="flex flex-col items-end text-right leading-none">
               <div
+                className="shrink-0 mb-2"
                 style={{
-                  position: "absolute",
-                  bottom: "calc(100% + 2px)",
-                  right: 0,
                   width: `${spectralizerWidth}px`,
-                  height: "80px",
+                  height: "96px",
                 }}
               >
                 <AudioSpectralizer audioElement={audioElement} isPlaying={isPlaying} />
@@ -59,8 +61,9 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
               <div ref={textContainerRef} className="flex flex-col leading-none">
                 <h1
                   ref={maanasRef}
-                  className="font-black text-[var(--off-white)] custom-font tracking-tighter"
+                  className="font-black custom-font tracking-tighter"
                   style={{
+                    color: "var(--foreground)",
                     fontSize: "min(10vw, 140px)",
                     lineHeight: "1",
                     marginBottom: "-0.20em",
@@ -69,8 +72,9 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
                   MAANAS
                 </h1>
                 <h2
-                  className="font-black text-[var(--off-white)] custom-font tracking-tighter"
+                  className="font-black custom-font tracking-tighter"
                   style={{
+                    color: "var(--foreground)",
                     fontSize: "min(2.5vw, 38px)",
                     lineHeight: "1",
                     marginTop: "0",
@@ -82,8 +86,9 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
             </div>
 
             <div
-              className="rounded-full border-4 border-[var(--off-white)] flex-shrink-0 overflow-hidden"
+              className="rounded-full border-4 flex-shrink-0 overflow-hidden"
               style={{
+                borderColor: "var(--foreground)",
                 height: `${Math.min(textHeight || 220, 220)}px`,
                 width: `${Math.min(textHeight || 220, 220)}px`,
                 marginLeft: "-0.15em",
@@ -96,32 +101,15 @@ const HeroSection = ({ heroRef, mousePosition, scrollToSection, audioElement, is
               />
             </div>
           </div>
-
-          {/* Resume / LinkedIn */}
-          <div className="mt-5 flex justify-center">
-            <div className="coolvetica-font flex gap-2 md:gap-3">
-              <a
-                href="./Maanas_Gopi_Resume.pdf"
-                className="px-3 py-1 sm:px-4 sm:py-1.5 md:px-6 md:py-2 bg-gray-900/80 text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-xs sm:text-sm uppercase tracking-wide"
-              >
-                Resume
-              </a>
-              <a
-                href="https://linkedin.com/in/maanas-gopi"
-                className="px-3 py-1 sm:px-4 sm:py-1.5 md:px-6 md:py-2 border border-gray-700 text-[var(--off-white)] rounded-full font-medium hover:border-amber-400 transition-colors text-xs sm:text-sm uppercase tracking-wide"
-              >
-                LinkedIn
-              </a>
-            </div>
-          </div>
         </div>
 
         <button
-          onClick={() => scrollToSection("about")}
-          className="absolute bottom-4 md:bottom-5 left-4 md:left-6 text-gray-400 hover:text-[var(--off-white)] transition-colors z-10"
+          onClick={() => scrollToSection("intro")}
+          className="absolute bottom-4 md:bottom-5 left-4 md:left-6 z-10 opacity-80 hover:opacity-100 transition-opacity"
           aria-label="Scroll to next section"
+          style={{ color: "var(--muted-foreground)" }}
         >
-          <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
+          <ChevronDown className="chevron-scroll-hint w-5 h-5 md:w-6 md:h-6" />
         </button>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader, Fraunces } from "next/font/google";
 import "./globals.css";
 import CustomStyles from '../components/common/CustomStyles.js';
 
@@ -13,16 +13,26 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const newsreader = Newsreader({
+  variable: "--font-editorial-serif",
+  subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+});
+
 export const metadata = {
   title: "maanasgopi.com",
-  description: "Maanas Gopi - Developer, Student, Producer",
+  description: "Maanas Gopi - CS + Econ + Phil @ UMD",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${fraunces.variable} antialiased`}
       >
         {children}
       </body>

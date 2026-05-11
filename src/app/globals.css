@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* Editorial / “reading” palette */
+  --background: #fbfaf7; /* warm paper */
+  --foreground: #161616; /* ink */
+  --muted-foreground: #5b5b5b;
+  --border: rgba(0, 0, 0, 0.10);
+  --card: rgba(255, 255, 255, 0.65);
+  --link: #0f5bff;
+  --link-hover: #0a43bd;
+
+  --content-max: 720px;
+  --content-max-wide: 960px;
 }
 
 @theme inline {
@@ -12,19 +21,207 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-editorial-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(15, 91, 255, 0.18);
+  color: var(--foreground);
+}
+
+/* Slightly calmer default link styling */
+a {
+  color: var(--link);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+/* Editorial layout utilities */
+/* Faint grain + existing washes — reads more “paper” than flat fill */
+.reading-shell {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.055'/%3E%3C/svg%3E"),
+    radial-gradient(1200px 600px at 20% -10%, rgba(15, 91, 255, 0.06), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(245, 158, 11, 0.08), transparent 55%),
+    var(--background);
+  background-size: 180px 180px, auto, auto, auto;
+}
+.reading-container {
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+.reading-container-wide {
+  max-width: var(--content-max-wide);
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Wrap `.kicker` + `.section-heading` — vertical gradient bar (masthead) */
+.section-title-block {
+  position: relative;
+  padding-left: 1.125rem;
+}
+.section-title-block::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  bottom: 0.2rem;
+  width: 4px;
+  border-radius: 3px;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 91, 255, 0.55) 0%,
+    rgba(22, 22, 22, 0.82) 45%,
+    rgba(245, 158, 11, 0.5) 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Main section titles — a bit more presence without shouting */
+.section-heading-masthead {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  padding-bottom: 0.3em;
+  text-wrap: balance;
+  color: var(--foreground);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    0 18px 42px rgba(15, 91, 255, 0.06);
+}
+.section-heading-masthead::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(100%, 12rem);
+  height: 4px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(15, 91, 255, 0.62) 0%,
+    rgba(22, 22, 22, 0.38) 48%,
+    rgba(245, 158, 11, 0.58) 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.section-heading {
+  font-family: var(--font-display), var(--font-editorial-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  /* faint letterpress on “paper” */
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* Optional flourish under standalone headlines (e.g. intro card) */
+.section-heading-accent {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.28em;
+}
+.section-heading-accent::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(7.5rem, 55%);
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(15, 91, 255, 0.45), rgba(245, 158, 11, 0.42));
+  opacity: 0.95;
+}
+
+.kicker {
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--muted-foreground);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Hide scrollbars but keep scrolling (for horizontal rails) */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge legacy */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 a.service-button {
   color: white !important;
   text-decoration: none;
+}
+a.service-button {
+  color: white !important;
+  text-decoration: none;
+}
+
+/* Waving hand emoji animation */
+@keyframes wave {
+  0%   { transform: rotate(  0deg); }
+  10%  { transform: rotate(-10deg); }
+  20%  { transform: rotate( 12deg); }
+  30%  { transform: rotate(-8deg);  }
+  40%  { transform: rotate( 10deg); }
+  50%  { transform: rotate( 0deg);  }
+  100% { transform: rotate( 0deg);  }
+}
+.wave-emoji {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: wave 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wave-emoji { animation: none; }
+}
+
+/* Hero scroll chevron — subtle “nudge” without stealing focus */
+@keyframes chevron-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translateY(5px);
+    opacity: 1;
+  }
+}
+.chevron-scroll-hint {
+  animation: chevron-nudge 2.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron-scroll-hint {
+    animation: none;
+  }
 }

@@ -3,13 +3,22 @@ import { experiences } from "../../data/experiences";
 import ExperienceCard from "../cards/ExperienceCard";
 
 const ExperienceSection = () => (
-  <section id="experience" className="py-8 px-4 sm:px-6 bg-[var(--almost-black)]">
-    <div className="max-w-4xl mx-auto">
-      <h2 className="custom-font text-xl sm:text-2xl font-bold mb-5 text-center text-[var(--off-white)]">
-        Work Experience
-      </h2>
+  <section id="experience" className="px-4 sm:px-6 py-7 sm:py-8">
+    <div className="reading-container">
+      <div className="section-title-block mb-4">
+        <div className="kicker mb-2">Where I’ve been</div>
+        <h2 className="section-heading section-heading-masthead text-2xl sm:text-3xl">
+          Experience
+        </h2>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div
+        className="divide-y divide-black/[0.07]"
+        style={{
+          borderTop: "1px solid rgba(0,0,0,0.07)",
+          borderBottom: "1px solid rgba(0,0,0,0.07)",
+        }}
+      >
         {experiences.map((exp, index) => (
           <ExperienceCard key={index} experience={exp} />
         ))}

@@ -43,6 +43,14 @@ export const spotifyTrackConfig = [
     source: "spotify",
     plays: "147,513"
   },
+  {
+    url: 'https://open.spotify.com/track/5yjL0Q1izlFUOEDJbqO1hM?si=8a578bbfef174a23', 
+    role: 'Producer',
+    customGenre: 'R&B',
+    description: 'First major R&B placement!',
+    source: "spotify",
+    plays: "120,125"
+  },
     {
     url: 'https://open.spotify.com/track/4qwxSPBaFxhMujIAA2ehie?si=5aafd60c4fc7424f', 
     role: 'Producer',

@@ -1,6 +1,6 @@
 export const projects = [
     {
-      title: "Text-Audio Sound Designer (AI One-Shot Editor)",
+      title: "Soundforge",
       period: "January 2025 — Present",
       description: " AI-powered sound design tool for music producers that takes user audio samples and natural language descriptors to generate transformed sounds.",
       impact: "7M+ collective views",
@@ -11,7 +11,7 @@ export const projects = [
       video: "/videos/1mainsaudio.mp4" 
     },
     {
-      title: "YouTube Type Beat Automation App",
+      title: "Beayter",
       period: "June 2025 — Present",
       description: "Automated BeatStars storefront → YouTube video publishing pipeline with metadata extraction + direct uploads.",
       impact: "7M+ collective views",

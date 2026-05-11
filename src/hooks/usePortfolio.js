@@ -15,7 +15,7 @@ export const usePortfolio = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
       
-      const sections = ['home', 'about', 'experience', 'projects', 'music', 'contact'];
+      const sections = ['home', 'intro', 'experience', 'projects', 'music', 'contact'];
       const currentSection = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {

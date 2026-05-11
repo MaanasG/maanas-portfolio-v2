@@ -7,15 +7,16 @@ const CustomStyles = () => {
   return (
     <style jsx global>{`
       :root {
-        --almost-black: #0a0a0a;
-        --off-white: #f3f2ef;
-        --purple-highlight: #f59e0b; /* amber-500 */
-        --blue-highlight: #fbbf24; /* amber-400 */
+        /* Keep existing tokens, but map them onto the new editorial palette */
+        --almost-black: var(--foreground);
+        --off-white: var(--background);
+        --purple-highlight: #111111;
+        --blue-highlight: var(--link);
       }
       
       body {
-        background-color: var(--almost-black);
-        color: var(--off-white);
+        background-color: var(--background);
+        color: var(--foreground);
       }
 
       .purple-highlight {
@@ -27,12 +28,11 @@ const CustomStyles = () => {
       }
 
       a {
-        color: var(--blue-highlight);
-        text-decoration: none;
+        color: var(--link);
       }
 
       a:hover {
-        color: var(--purple-highlight);
+        color: var(--link-hover);
       }
       
       /* === Font Faces === */

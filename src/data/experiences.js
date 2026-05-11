@@ -1,6 +1,6 @@
 export const experiences = [
   {
-    title: "Software Development Engineering Intern",
+    title: "Software Engineering Intern",
     company: "Enfusion",
     location: "New York City, NY",
     period: "June 2025 — Aug. 2025",
@@ -42,7 +42,7 @@ export const experiences = [
     logo: "/logos/icode.png"
   },
     {
-    title: "Front-End Development Intern",
+    title: "Software Engineering Intern",
     company: "eMedEvents",
     location: "Somerville, NJ",
     period: "June 2021 – Aug. 2021",

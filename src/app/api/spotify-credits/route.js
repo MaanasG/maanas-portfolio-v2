@@ -28,6 +28,7 @@ export async function GET() {
     const trackIds = [];
     
     for (const config of spotifyTrackConfig) {
+      if (config.source && config.source !== "spotify") continue;
       try {
         const trackId = extractSpotifyTrackId(config.url);
         trackIds.push(trackId);

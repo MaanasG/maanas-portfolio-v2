@@ -6,14 +6,14 @@ import LoadingScreen from './sections/LoadingScreen';
 import CustomStyles from './common/CustomStyles';
 import Navigation from './sections/Navigation';
 import HeroSection from './sections/HeroSection';
+import IntroBlurbSection from './sections/IntroBlurbSection';
 import ExperienceSection from './sections/ExperienceSection';
 import ProjectsSection from './sections/ProjectsSection';
-import MusicSection from './sections/MusicSection';
+import MusicSectionEditorial from './sections/MusicSectionEditorial';
 import ContactSection from './sections/ContactSection';
 import Footer from './ui/Footer';
 
 import { projects } from '../data/projects';
-import { tracks } from '../data/tracks';
 
 const Portfolio = () => {
   const {
@@ -50,7 +50,7 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--almost-black)] text-white overflow-x-hidden">
+    <div className="min-h-screen reading-shell overflow-x-hidden">
       <CustomStyles />
       
       {/* Loading Screen */}
@@ -78,18 +78,12 @@ const Portfolio = () => {
           isPlaying={actuallyPlaying}  
         />
 
+        <IntroBlurbSection />
+
         {/* <AboutSection /> */}
         <ExperienceSection />
         <ProjectsSection projects={projects} />
-        {/* <MusicSection 
-          isPlaying={isPlaying}
-          isMuted={isMuted}
-          currentTrack={currentTrack}
-          setCurrentTrack={setCurrentTrack}
-          toggleMusic={toggleMusic}
-          toggleMute={toggleMute}
-          tracks={tracks}
-        /> */}
+        <MusicSectionEditorial />
         <ContactSection />
         {/* <Footer /> */}
       </div>

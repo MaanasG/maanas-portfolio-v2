@@ -132,7 +132,8 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
       const decayRate = 4; 
       const sensitivityBoost = 2;
 
-      const barFill = isActive ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.55)";
+      /* Ink tones so bars read on the light editorial background */
+      const barFill = isActive ? "rgba(22, 22, 22, 0.88)" : "rgba(22, 22, 22, 0.32)";
 
       for (let i = 0; i < numBars; i++) {
         let targetHeight = previousHeightsRef.current[i];
@@ -156,10 +157,10 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
         const w = Math.round(barWidth);
         const h = Math.round(smoothedHeight);
 
-        ctx.shadowColor = "rgba(0,0,0,0.15)";
-        ctx.shadowBlur = 3;
+        ctx.shadowColor = "rgba(0,0,0,0.08)";
+        ctx.shadowBlur = 2;
         ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 2;
+        ctx.shadowOffsetY = 1;
 
         ctx.fillStyle = barFill;
         drawRoundedRect(ctx, x - w / 2, y, w, h, 6);
@@ -223,7 +224,10 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
         `}
       >
         <div className="px-3 py-1.5">
-          <p className="text-gray-200/80 text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap text-center">
+          <p
+            className="text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap text-center"
+            style={{ color: "var(--muted-foreground)" }}
+          >
             <span className="inline-block animate-pulse mr-1">▶</span>
             Hit play to see the visualizer in action
           </p>

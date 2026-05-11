@@ -1,67 +1,113 @@
 import React from "react";
 import { ExternalLink, Github } from "lucide-react";
 
-const ProjectCard = ({ project }) => (
-  <article className="bg-gray-900/40 border border-gray-800/60 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
-    <div className="relative bg-gray-900/30 aspect-video">
-      {project.video ? (
-        <video
-          src={project.video}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-        />
-      ) : project.image ? (
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-      ) : (
-        <div className="w-full h-full bg-gray-800/60 flex items-center justify-center">
-          <div className="w-12 h-12 bg-gray-800 rounded-full blur-sm" />
+const ProjectCard = ({ project }) => {
+  const hasMedia = Boolean(project.video || project.image);
+
+  return (
+    <article
+      className="group py-4 sm:py-5"
+      style={{
+        borderColor: "var(--border)",
+      }}
+    >
+      <div className="flex items-start gap-4">
+        {hasMedia && (
+          <div className="hidden sm:block w-[96px] shrink-0">
+            <div
+              className="overflow-hidden rounded-xl border"
+              style={{ borderColor: "var(--border)", background: "rgba(0,0,0,0.03)" }}
+            >
+              {project.video ? (
+                <video
+                  src={project.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-[72px] object-cover"
+                />
+              ) : (
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-[72px] object-cover"
+                  loading="lazy"
+                />
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="min-w-0 flex-1">
+          <div
+            className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5"
+            style={{ fontFamily: "var(--font-geist-sans)" }}
+          >
+            <h3 className="section-heading text-base sm:text-lg font-semibold leading-snug">
+              {project.title}
+            </h3>
+            <div className="text-xs" style={{ color: "var(--muted-foreground)" }}>
+              {project.period}
+            </div>
+          </div>
+
+          {project.description && (
+            <p className="mt-2 text-[15px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
+              {project.description}
+            </p>
+          )}
+
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+            {project.impact && (
+              <div className="text-sm" style={{ fontFamily: "var(--font-geist-sans)", color: "var(--muted-foreground)" }}>
+                <span style={{ color: "var(--foreground)" }}>Impact</span> {project.impact}
+              </div>
+            )}
+
+            {Array.isArray(project.tech) && project.tech.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {project.tech.slice(0, 4).map((tech, idx) => (
+                  <span
+                    key={idx}
+                    className="text-xs"
+                    style={{
+                      fontFamily: "var(--font-geist-sans)",
+                      color: "var(--muted-foreground)",
+                      borderBottom: "1px solid rgba(0,0,0,0.10)",
+                    }}
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {project.tech.length > 4 && (
+                  <span
+                    className="text-xs"
+                    style={{ fontFamily: "var(--font-geist-sans)", color: "var(--muted-foreground)" }}
+                  >
+                    +{project.tech.length - 4}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-3 flex gap-4 items-center" style={{ fontFamily: "var(--font-geist-sans)" }}>
+            {project.github && project.github !== "#" && (
+              <a href={project.github} className="inline-flex items-center gap-2 text-sm">
+                <Github className="w-4 h-4" /> Code
+              </a>
+            )}
+            {project.demo && project.demo !== "#" && (
+              <a href={project.demo} className="inline-flex items-center gap-2 text-sm">
+                <ExternalLink className="w-4 h-4" /> Live
+              </a>
+            )}
+          </div>
         </div>
-      )}
-    </div>
-
-    <div className="p-3 flex flex-col flex-1">
-      <h3 className="text-base font-bold text-[var(--off-white)] leading-snug line-clamp-2">{project.title}</h3>
-      <p className="text-gray-300 text-xs mt-1">{project.period}</p>
-
-      <div className="flex flex-wrap gap-1 mt-3">
-        {project.tech.map((tech, idx) => (
-          <span
-            key={idx}
-            className="px-2 py-0.5 bg-amber-500/10 text-amber-200 rounded text-[10px] border border-amber-500/20"
-          >
-            {tech}
-          </span>
-        ))}
       </div>
-
-      <div className="flex gap-3 mt-4 pt-2 border-t border-gray-800/60">
-        {project.github && project.github !== "#" && (
-          <a
-            href={project.github}
-            className="flex items-center gap-1.5 text-gray-400 hover:text-[var(--off-white)] transition-colors text-xs"
-          >
-            <Github className="w-4 h-4" /> Code
-          </a>
-        )}
-        {project.demo && project.demo !== "#" && (
-          <a
-            href={project.demo}
-            className="flex items-center gap-1.5 text-amber-400 hover:text-amber-500 transition-colors text-xs"
-          >
-            <ExternalLink className="w-4 h-4" /> Demo
-          </a>
-        )}
-      </div>
-    </div>
-  </article>
-);
+    </article>
+  );
+};
 
 export default ProjectCard;

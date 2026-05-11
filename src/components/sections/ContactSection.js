@@ -1,54 +1,75 @@
 import React from 'react';
 import { Mail, Linkedin, Github } from 'lucide-react';
-import TechSkillsMarquee from '../ui/TechSkillsMarquee';
+
+const cardClass =
+  "rounded-xl border p-3 transition-colors hover:bg-black/[0.02]";
 
 const ContactSection = () => (
-  <section id="contact" className="py-12 px-4 sm:px-6 bg-[var(--almost-black)]">
-    <div className="max-w-3xl mx-auto text-center">
-      <h2 className="custom-font text-3xl sm:text-4xl font-bold mb-3">
-        <span className="text-[var(--off-white)]">Let&apos;s</span>
-        <span className="text-amber-500"> Connect</span>
-      </h2>
-      <p className="coolvetica-font text-base sm:text-lg text-gray-300 mb-8 max-w-xl mx-auto">
-        Reach out anywhere below!
+  <section id="contact" className="px-4 sm:px-6 py-7 sm:py-8">
+    <div className="reading-container">
+      <div className="section-title-block mb-2">
+        <div className="kicker mb-1.5">Say hi</div>
+        <h2 className="section-heading section-heading-masthead text-xl sm:text-2xl">
+          Let&apos;s connect
+        </h2>
+      </div>
+      <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--muted-foreground)" }}>
+        Email is best. I&apos;m always down to talk music + tools + interesting problems.
       </p>
       
-      <div className="coolvetica-font grid md:grid-cols-3 gap-4 mb-10">
+      <div className="grid sm:grid-cols-3 gap-2" style={{ fontFamily: "var(--font-geist-sans)" }}>
         <a 
           href="mailto:mgopi@terpmail.umd.edu"
-          className="group bg-gray-900/30 border border-gray-800/60 rounded-2xl p-5 hover:border-amber-400 transition-all duration-300 transform hover:scale-[1.02] shadow-sm hover:shadow-md"
+          className={cardClass}
+          style={{ background: "var(--card)", borderColor: "var(--border)" }}
         >
-          <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:bg-amber-500/20 transition-colors">
-            <Mail className="w-6 h-6 text-amber-300" />
+          <div className="flex items-start gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(0,0,0,0.04)" }}>
+              <Mail className="w-4 h-4" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-medium uppercase tracking-wide" style={{ color: "var(--muted-foreground)" }}>Email</div>
+              <div className="text-xs leading-snug mt-0.5 break-all" style={{ color: "var(--foreground)" }}>mgopi@terpmail.umd.edu</div>
+            </div>
           </div>
-          <h3 className="text-base font-semibold mb-1 text-[var(--off-white)]">Email</h3>
-          <p className="text-gray-300 text-sm">mgopi@terpmail.umd.edu</p>
         </a>
         
         <a 
           href="https://linkedin.com/in/maanas-gopi"
-          className="group bg-gray-900/30 border border-gray-800/60 rounded-2xl p-5 hover:border-amber-400 transition-all duration-300 transform hover:scale-[1.02] shadow-sm hover:shadow-md"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cardClass}
+          style={{ background: "var(--card)", borderColor: "var(--border)" }}
         >
-          <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:bg-amber-500/20 transition-colors">
-            <Linkedin className="w-6 h-6 text-amber-300" />
+          <div className="flex items-start gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(0,0,0,0.04)" }}>
+              <Linkedin className="w-4 h-4" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-medium uppercase tracking-wide" style={{ color: "var(--muted-foreground)" }}>LinkedIn</div>
+              <div className="text-xs leading-snug mt-0.5 break-all" style={{ color: "var(--foreground)" }}>linkedin.com/in/maanas-gopi</div>
+            </div>
           </div>
-          <h3 className="text-base font-semibold mb-1 text-[var(--off-white)]">LinkedIn</h3>
-          <p className="text-gray-300 text-sm">Connect with me!</p>
         </a>
         
         <a 
           href="https://github.com/maanasgopi"
-          className="group bg-gray-900/30 border border-gray-800/60 rounded-2xl p-5 hover:border-amber-400 transition-all duration-300 transform hover:scale-[1.02] shadow-sm hover:shadow-md"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cardClass}
+          style={{ background: "var(--card)", borderColor: "var(--border)" }}
         >
-          <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:bg-amber-500/20 transition-colors">
-            <Github className="w-6 h-6 text-amber-300" />
+          <div className="flex items-start gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(0,0,0,0.04)" }}>
+              <Github className="w-4 h-4" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-medium uppercase tracking-wide" style={{ color: "var(--muted-foreground)" }}>GitHub</div>
+              <div className="text-xs leading-snug mt-0.5 break-all" style={{ color: "var(--foreground)" }}>github.com/maanasgopi</div>
+            </div>
           </div>
-          <h3 className="text-base font-semibold mb-1 text-[var(--off-white)]">GitHub</h3>
-          <p className="text-gray-300 text-sm">All my projects + experiments!</p>
         </a>
       </div>
-
-      <TechSkillsMarquee />
     </div>
   </section>
 );
