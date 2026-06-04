@@ -61,9 +61,22 @@ const ExperienceCard = ({ experience }) => {
               className="text-xs sm:text-sm flex flex-col items-end text-right"
               style={{ color: "var(--muted-foreground)" }}
             >
-              <div className="flex items-center gap-2 justify-end">
+              <div className="flex items-center gap-2 justify-end flex-wrap">
                 <Calendar className="w-4 h-4 shrink-0" />
                 <span>{experience.period}</span>
+                {experience.incoming && (
+                  <span
+                    className="text-[10px] sm:text-xs uppercase tracking-wide px-1.5 py-0.5 rounded"
+                    style={{
+                      fontFamily: "var(--font-geist-sans)",
+                      color: "var(--muted-foreground)",
+                      border: "1px solid rgba(0,0,0,0.12)",
+                      background: "rgba(0,0,0,0.03)",
+                    }}
+                  >
+                    Incoming
+                  </span>
+                )}
               </div>
               {experience.location && (
                 <div className="mt-1 flex items-center gap-2 justify-end italic">

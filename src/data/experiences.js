@@ -1,6 +1,19 @@
 export const experiences = [
   {
     title: "Software Engineering Intern",
+    company: "OnePay",
+    location: "New York City, NY",
+    period: "Summer 2026",
+    incoming: true,
+    highlights: [
+      "Payments & customer-platform engineering on the Servicing & Marketing team"
+    ],
+    tech: [],
+    color: "from-amber-400 to-yellow-500",
+    logo: "/logos/onepay.png"
+  },
+  {
+    title: "Software Engineering Intern",
     company: "IBM",
     location: "Baton Rouge, LA",
     period: "May 2026 — Present",
