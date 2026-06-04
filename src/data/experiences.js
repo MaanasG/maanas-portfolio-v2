@@ -1,6 +1,19 @@
 export const experiences = [
   {
     title: "Software Engineering Intern",
+    company: "IBM",
+    location: "Baton Rouge, LA",
+    period: "May 2026 — Present",
+    highlights: [
+      "Python/Bash CI/CD for Oracle WebLogic, cutting deploy cycles",
+      "Distributed telemetry across nodes to speed up failure detection"
+    ],
+    tech: ["Python", "Bash", "CI/CD", "Oracle WebLogic"],
+    color: "from-amber-400 to-yellow-500",
+    logo: "/logos/ibm.png"
+  },
+  {
+    title: "Software Engineering Intern",
     company: "Enfusion",
     location: "New York City, NY",
     period: "June 2025 — Aug. 2025",
