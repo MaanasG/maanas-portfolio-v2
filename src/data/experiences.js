@@ -6,7 +6,7 @@ export const experiences = [
     period: "Summer 2026",
     incoming: true,
     highlights: [
-      "Payments & customer-platform engineering on the Servicing & Marketing team"
+      "Payment processing & customer-platform on Servicing & Marketing"
     ],
     tech: [],
     color: "from-amber-400 to-yellow-500",
@@ -17,9 +17,11 @@ export const experiences = [
     company: "IBM",
     location: "Baton Rouge, LA",
     period: "May 2026 — Present",
+    current: true,
     highlights: [
-      "Python/Bash CI/CD for Oracle WebLogic, cutting deploy cycles",
-      "Distributed telemetry across nodes to speed up failure detection"
+      "CI/CD automation for Oracle WebLogic deploys",
+      "HPC telemetry for real-time cluster & job health",
+      "Dashboards & analytics for compute workload bottlenecks"
     ],
     tech: ["Python", "Bash", "CI/CD", "Oracle WebLogic"],
     color: "from-amber-400 to-yellow-500",
@@ -31,11 +33,11 @@ export const experiences = [
     location: "New York City, NY",
     period: "June 2025 — Aug. 2025",
     highlights: [
-      "Built multithreaded Java/Spring order-fill blotter simulating 150+ FIX msgs/sec",
-      "Tool now used by 850+ clients and internal QA team",
-      "Developed real-time regression reporting tool cutting test feedback from 7 hrs to instant diffs"
+      "Java/Spring engine: 150+ FIX msgs/sec, +75% throughput",
+      "Jenkins pipeline cut QA cycles from 7 hours to 5 min",
+      "Debugged production faults via CloudWatch & SQL"
     ],
-    tech: ["Java", "Spring", "Python", "HTML"],
+    tech: ["Java", "Spring", "AWS", "Python", "Jenkins"],
     color: "from-amber-400 to-yellow-500",
     logo: "/logos/enfusion.png" 
   },
@@ -45,11 +47,11 @@ export const experiences = [
     location: "Severance, CO",
     period: "Aug. 2024 — Nov. 2024",
     highlights: [
-      "Developed interactive analytics site using React.js tracking 500+ advertising clients",
-      "Implemented Python/FastAPI backend with Twilio processing 50+ requests/day",
-      "Delivered 10+ production React features improving client engagement"
+      "FastAPI microservices on Docker/Kubernetes",
+      "Event-driven backends with DLQs for 500+ clients",
+      "React/TypeScript dashboards with analytics & APIs"
     ],
-    tech: ["React.js", "Python", "FastAPI", "Twilio"],
+    tech: ["FastAPI", "Docker", "Kubernetes", "React", "TypeScript"],
     color: "from-amber-400 to-amber-500",
     logo: "/logos/sportsmedia.png"
   },
@@ -59,11 +61,10 @@ export const experiences = [
     location: "Bridgewater, NJ",
     period: "Feb. 2022 — Sep. 2024",
     highlights: [
-      "Directed curriculum development for 75+ franchise locations",
-      "Taught 200+ students in programming, web development, and data analysis",
-      "Covered Python, Java, and introductory ML concepts"
+      "Automated LeetCode-style tests across 75+ locations",
+      "Taught Java, Python, SQL, OOP, and algorithms"
     ],
-    tech: ["Python", "Java", "Machine Learning"],
+    tech: ["Python", "Java", "SQL"],
     color: "from-amber-300 to-yellow-400",
     logo: "/logos/icode.png"
   },
@@ -73,10 +74,10 @@ export const experiences = [
     location: "Somerville, NJ",
     period: "June 2021 – Aug. 2021",
     highlights: [
-      "Redesigned site interaction flows in Figma, improving UX for 150K+ users.",
-      "Built 20+ production components using HTML, CSS, and JavaScript.",
+      "JS/Python data tools improving processing efficiency 25%",
+      "Validation pipelines for 150K+ monthly active users"
     ],
-    tech: ["HTML", "CSS", "Figma", "JavaScript"],
+    tech: ["JavaScript", "Python"],
     color: "from-amber-300 to-yellow-400",
     logo: "/logos/emedevents.png"
   }

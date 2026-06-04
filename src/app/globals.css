@@ -225,3 +225,93 @@ a.service-button {
     animation: none;
   }
 }
+
+/* Experience timeline — current role pulse */
+@keyframes experience-current-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(16, 185, 129, 0.42),
+      0 0 0 6px rgba(16, 185, 129, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 7px rgba(16, 185, 129, 0),
+      0 0 0 6px rgba(16, 185, 129, 0.12);
+  }
+}
+.experience-marker-current {
+  animation: experience-current-pulse 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .experience-marker-current {
+    animation: none;
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.12) !important;
+  }
+}
+
+/* Tech stack — slow editorial marquee */
+@keyframes tech-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.tech-marquee-mask::before,
+.tech-marquee-mask::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2.5rem;
+  z-index: 1;
+  pointer-events: none;
+}
+.tech-marquee-mask::before {
+  left: 0;
+  background: linear-gradient(to right, var(--background), transparent);
+}
+.tech-marquee-mask::after {
+  right: 0;
+  background: linear-gradient(to left, var(--background), transparent);
+}
+.tech-marquee-track {
+  animation: tech-marquee 42s linear infinite;
+}
+.tech-marquee-mask:hover .tech-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tech-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+}
+
+/* Project cards — subtle pulse when site audio plays */
+@keyframes project-border-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(15, 91, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(15, 91, 255, 0.2);
+  }
+}
+.project-card-audio-pulse .project-media-glow {
+  animation: project-border-pulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-card-audio-pulse .project-media-glow {
+    animation: none;
+  }
+}
+
+/* Music credit — previewing state */
+.credit-card-previewing {
+  outline: 2px solid rgba(15, 91, 255, 0.35);
+  outline-offset: 2px;
+}

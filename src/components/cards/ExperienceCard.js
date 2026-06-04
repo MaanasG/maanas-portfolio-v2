@@ -8,9 +8,115 @@ function accentFromGradientToken(token) {
   return "rgba(0,0,0,0.22)";
 }
 
+function getExperienceStatus(experience) {
+  if (experience.incoming) return "incoming";
+  if (experience.current) return "current";
+  return null;
+}
+
+const STATUS_CONFIG = {
+  current: {
+    label: "Now",
+    shell: {
+      background:
+        "linear-gradient(135deg, rgba(16, 185, 129, 0.09) 0%, rgba(255, 255, 255, 0.72) 52%, rgba(209, 250, 229, 0.18) 100%)",
+      border: "1px solid rgba(16, 185, 129, 0.28)",
+      boxShadow:
+        "0 10px 36px rgba(16, 185, 129, 0.14), 0 0 0 1px rgba(16, 185, 129, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.65)",
+    },
+    accentBar: "linear-gradient(180deg, rgba(16, 185, 129, 0.85), rgba(52, 211, 153, 0.45))",
+    badge: {
+      color: "#047857",
+      border: "1px solid rgba(16, 185, 129, 0.35)",
+      background: "rgba(16, 185, 129, 0.14)",
+    },
+    logoFrame: {
+      borderColor: "rgba(16, 185, 129, 0.22)",
+      background: "rgba(255, 255, 255, 0.72)",
+      boxShadow: "0 4px 14px rgba(16, 185, 129, 0.1)",
+    },
+    marker: "rgba(16, 185, 129, 0.85)",
+  },
+  incoming: {
+    label: "Up next",
+    shell: {
+      background:
+        "linear-gradient(135deg, rgba(15, 91, 255, 0.05) 0%, rgba(255, 255, 255, 0.55) 100%)",
+      border: "1.5px dashed rgba(15, 91, 255, 0.28)",
+      boxShadow: "0 8px 28px rgba(15, 91, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55)",
+    },
+    accentBar: "linear-gradient(180deg, rgba(15, 91, 255, 0.55), rgba(15, 91, 255, 0.18))",
+    badge: {
+      color: "#0a43bd",
+      border: "1px dashed rgba(15, 91, 255, 0.35)",
+      background: "rgba(15, 91, 255, 0.07)",
+    },
+    logoFrame: {
+      borderColor: "rgba(15, 91, 255, 0.2)",
+      background: "rgba(255, 255, 255, 0.62)",
+      boxShadow: "none",
+    },
+  },
+};
+
+const StatusBadge = ({ status }) => {
+  const config = STATUS_CONFIG[status];
+  if (!config) return null;
+
+  return (
+    <span
+      className="text-[10px] sm:text-xs uppercase tracking-wide px-1.5 py-0.5 rounded"
+      style={{
+        fontFamily: "var(--font-geist-sans)",
+        fontWeight: 600,
+        letterSpacing: "0.08em",
+        ...config.badge,
+      }}
+    >
+      {config.label}
+    </span>
+  );
+};
+
+const TimelineMarker = ({ status, accent }) => {
+  if (status === "current") {
+    return (
+      <div
+        className="experience-marker-current w-2.5 h-2.5 rounded-full"
+        style={{ background: STATUS_CONFIG.current.marker }}
+        aria-hidden="true"
+      />
+    );
+  }
+
+  if (status === "incoming") {
+    return (
+      <div
+        className="w-2.5 h-2.5 rounded-full border-2 border-dashed"
+        style={{
+          borderColor: "rgba(15, 91, 255, 0.45)",
+          background: "rgba(255, 255, 255, 0.85)",
+          boxShadow: "0 0 0 6px rgba(15, 91, 255, 0.06)",
+        }}
+        aria-hidden="true"
+      />
+    );
+  }
+
+  return (
+    <div
+      className="w-2.5 h-2.5 rounded-full"
+      style={{ background: accent, boxShadow: "0 0 0 6px rgba(0,0,0,0.03)" }}
+      aria-hidden="true"
+    />
+  );
+};
+
 const ExperienceCard = ({ experience }) => {
   const [expanded, setExpanded] = useState(false);
   const accent = useMemo(() => accentFromGradientToken(experience.color), [experience.color]);
+  const status = getExperienceStatus(experience);
+  const statusConfig = status ? STATUS_CONFIG[status] : null;
 
   const highlights = Array.isArray(experience.highlights) ? experience.highlights : [];
   const visibleHighlights = expanded ? highlights : highlights.slice(0, 2);
@@ -18,122 +124,135 @@ const ExperienceCard = ({ experience }) => {
 
   const tech = Array.isArray(experience.tech) ? experience.tech : [];
 
-  return (
-    <article className="group py-4 sm:py-5">
-      <div className="flex items-start gap-4">
-        {/* timeline marker */}
-        <div className="pt-1">
-          <div
-            className="w-2.5 h-2.5 rounded-full"
-            style={{ background: accent, boxShadow: "0 0 0 6px rgba(0,0,0,0.03)" }}
-            aria-hidden="true"
+  const cardBody = (
+    <>
+      {experience.logo && (
+        <div
+          className="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl border shrink-0"
+          style={
+            statusConfig
+              ? statusConfig.logoFrame
+              : { borderColor: "var(--border)", background: "rgba(0,0,0,0.03)" }
+          }
+        >
+          <img
+            src={experience.logo}
+            alt={experience.company}
+            className="max-h-8 max-w-[40px] w-auto h-auto object-contain"
           />
         </div>
+      )}
 
-        {experience.logo && (
-          <div
-            className="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl border shrink-0"
-            style={{ borderColor: "var(--border)", background: "rgba(0,0,0,0.03)" }}
-          >
-            <img
-              src={experience.logo}
-              alt={experience.company}
-              className="max-h-8 max-w-[40px] w-auto h-auto object-contain"
-            />
-          </div>
-        )}
-
-        <div className="min-w-0 flex-1">
-          <div
-            className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5"
-            style={{ fontFamily: "var(--font-geist-sans)" }}
-          >
-            <div className="min-w-0">
-              <h3 className="section-heading text-base sm:text-lg font-semibold leading-snug">
-                {experience.title}
-              </h3>
-              <div className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-                {experience.company}
-              </div>
-            </div>
-
-            <div
-              className="text-xs sm:text-sm flex flex-col items-end text-right"
-              style={{ color: "var(--muted-foreground)" }}
-            >
-              <div className="flex items-center gap-2 justify-end flex-wrap">
-                <Calendar className="w-4 h-4 shrink-0" />
-                <span>{experience.period}</span>
-                {experience.incoming && (
-                  <span
-                    className="text-[10px] sm:text-xs uppercase tracking-wide px-1.5 py-0.5 rounded"
-                    style={{
-                      fontFamily: "var(--font-geist-sans)",
-                      color: "var(--muted-foreground)",
-                      border: "1px solid rgba(0,0,0,0.12)",
-                      background: "rgba(0,0,0,0.03)",
-                    }}
-                  >
-                    Incoming
-                  </span>
-                )}
-              </div>
-              {experience.location && (
-                <div className="mt-1 flex items-center gap-2 justify-end italic">
-                  <MapPin className="w-4 h-4 shrink-0" />
-                  <span>{experience.location}</span>
-                </div>
-              )}
+      <div className="min-w-0 flex-1">
+        <div
+          className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5"
+          style={{ fontFamily: "var(--font-geist-sans)" }}
+        >
+          <div className="min-w-0">
+            <h3 className="section-heading text-base sm:text-lg font-semibold leading-snug">
+              {experience.title}
+            </h3>
+            <div className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+              {experience.company}
             </div>
           </div>
 
-          {/* highlights (compact, expandable) */}
-          {highlights.length > 0 && (
-            <ul className="mt-2 space-y-1.5 text-[15px] leading-relaxed">
-              {visibleHighlights.map((h, idx) => (
-                <li key={idx} style={{ color: "var(--muted-foreground)" }}>
-                  {h}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-            {canExpand && (
-              <button
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                className="text-sm underline"
-                style={{ fontFamily: "var(--font-geist-sans)", color: "var(--muted-foreground)", textUnderlineOffset: 3 }}
-              >
-                {expanded ? "Show less" : `Show ${highlights.length - 2} more`}
-              </button>
-            )}
-
-            {tech.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {tech.slice(0, 4).map((t, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs"
-                    style={{
-                      fontFamily: "var(--font-geist-sans)",
-                      color: "var(--muted-foreground)",
-                      borderBottom: "1px solid rgba(0,0,0,0.10)",
-                    }}
-                  >
-                    {t}
-                  </span>
-                ))}
-                {tech.length > 4 && (
-                  <span className="text-xs" style={{ fontFamily: "var(--font-geist-sans)", color: "var(--muted-foreground)" }}>
-                    +{tech.length - 4}
-                  </span>
-                )}
+          <div
+            className="text-xs sm:text-sm flex flex-col items-end text-right"
+            style={{ color: "var(--muted-foreground)" }}
+          >
+            <div className="flex items-center gap-2 justify-end flex-wrap">
+              <Calendar className="w-4 h-4 shrink-0" />
+              <span>{experience.period}</span>
+              {status && <StatusBadge status={status} />}
+            </div>
+            {experience.location && (
+              <div className="mt-1 flex items-center gap-2 justify-end italic">
+                <MapPin className="w-4 h-4 shrink-0" />
+                <span>{experience.location}</span>
               </div>
             )}
           </div>
         </div>
+
+        {highlights.length > 0 && (
+          <ul className="mt-2 space-y-1.5 text-[15px] leading-relaxed">
+            {visibleHighlights.map((h, idx) => (
+              <li key={idx} style={{ color: "var(--muted-foreground)" }}>
+                {h}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          {canExpand && (
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              className="text-sm underline"
+              style={{
+                fontFamily: "var(--font-geist-sans)",
+                color: "var(--muted-foreground)",
+                textUnderlineOffset: 3,
+              }}
+            >
+              {expanded ? "Show less" : `Show ${highlights.length - 2} more`}
+            </button>
+          )}
+
+          {tech.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {tech.slice(0, 4).map((t, idx) => (
+                <span
+                  key={idx}
+                  className="text-xs"
+                  style={{
+                    fontFamily: "var(--font-geist-sans)",
+                    color: "var(--muted-foreground)",
+                    borderBottom: "1px solid rgba(0,0,0,0.10)",
+                  }}
+                >
+                  {t}
+                </span>
+              ))}
+              {tech.length > 4 && (
+                <span
+                  className="text-xs"
+                  style={{ fontFamily: "var(--font-geist-sans)", color: "var(--muted-foreground)" }}
+                >
+                  +{tech.length - 4}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+
+  return (
+    <article className={`group ${status ? "py-4 sm:py-5" : "py-3 sm:py-4"}`}>
+      <div className="flex items-start gap-4">
+        <div className="pt-1 shrink-0">
+          <TimelineMarker status={status} accent={accent} />
+        </div>
+
+        {statusConfig ? (
+          <div
+            className="relative min-w-0 flex-1 flex items-start gap-4 rounded-2xl px-3 py-3 sm:px-4 sm:py-4 overflow-hidden"
+            style={statusConfig.shell}
+          >
+            <div
+              className="absolute left-0 top-3 bottom-3 w-1 rounded-full"
+              style={{ background: statusConfig.accentBar }}
+              aria-hidden="true"
+            />
+            <div className="flex items-start gap-4 min-w-0 flex-1 pl-2">{cardBody}</div>
+          </div>
+        ) : (
+          <div className="min-w-0 flex-1 flex items-start gap-4">{cardBody}</div>
+        )}
       </div>
     </article>
   );
