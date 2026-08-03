@@ -132,8 +132,12 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
       const decayRate = 4; 
       const sensitivityBoost = 2;
 
-      /* Ink tones so bars read on the light editorial background */
-      const barFill = isActive ? "rgba(22, 22, 22, 0.88)" : "rgba(22, 22, 22, 0.32)";
+      // Follow theme so bars stay visible on paper and dark backgrounds
+      const isDark = document.documentElement.classList.contains("dark");
+      const barFill = isDark
+        ? (isActive ? "rgba(243, 241, 236, 0.92)" : "rgba(243, 241, 236, 0.34)")
+        : (isActive ? "rgba(22, 22, 22, 0.88)" : "rgba(22, 22, 22, 0.32)");
+      const shadow = isDark ? "rgba(0,0,0,0.45)" : "rgba(0,0,0,0.08)";
 
       for (let i = 0; i < numBars; i++) {
         let targetHeight = previousHeightsRef.current[i];
@@ -157,7 +161,7 @@ const AudioSpectralizer = ({ audioElement, isPlaying }) => {
         const w = Math.round(barWidth);
         const h = Math.round(smoothedHeight);
 
-        ctx.shadowColor = "rgba(0,0,0,0.08)";
+        ctx.shadowColor = shadow;
         ctx.shadowBlur = 2;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 1;
