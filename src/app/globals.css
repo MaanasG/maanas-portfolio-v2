@@ -7,11 +7,153 @@
   --muted-foreground: #5b5b5b;
   --border: rgba(0, 0, 0, 0.10);
   --card: rgba(255, 255, 255, 0.65);
+  --surface: rgba(255, 255, 255, 0.55);
+  --surface-muted: rgba(255, 255, 255, 0.35);
   --link: #0f5bff;
   --link-hover: #0a43bd;
+  --control-bg: rgba(0, 0, 0, 0.04);
+  --control-bg-strong: rgba(0, 0, 0, 0.06);
+  --nav-bg: rgba(251, 250, 247, 0.45);
+  --nav-bg-scrolled: rgba(251, 250, 247, 0.76);
+  --progress-track: rgba(0, 0, 0, 0.06);
+  --progress-fill: rgba(0, 0, 0, 0.35);
+  --hairline: rgba(0, 0, 0, 0.10);
+  --studio-veil:
+    linear-gradient(90deg, rgba(251, 250, 247, 0.96) 0%, rgba(251, 250, 247, 0.72) 40%, rgba(251, 250, 247, 0.10) 100%),
+    radial-gradient(900px 280px at 20% 0%, rgba(15, 91, 255, 0.10), transparent 60%),
+    radial-gradient(700px 260px at 40% 90%, rgba(245, 158, 11, 0.12), transparent 55%);
 
   --content-max: 720px;
   --content-max-wide: 960px;
+}
+
+html.dark {
+  --background: #121212;
+  --foreground: #f3f1ec;
+  --muted-foreground: #c4c0b6;
+  --border: rgba(255, 255, 255, 0.14);
+  --card: rgba(255, 255, 255, 0.08);
+  --surface: rgba(255, 255, 255, 0.10);
+  --surface-muted: rgba(255, 255, 255, 0.07);
+  --link: #7aa2ff;
+  --link-hover: #a8c1ff;
+  --control-bg: rgba(255, 255, 255, 0.08);
+  --control-bg-strong: rgba(255, 255, 255, 0.12);
+  --nav-bg: rgba(18, 18, 18, 0.55);
+  --nav-bg-scrolled: rgba(18, 18, 18, 0.82);
+  --progress-track: rgba(255, 255, 255, 0.10);
+  --progress-fill: rgba(255, 255, 255, 0.45);
+  --hairline: rgba(255, 255, 255, 0.18);
+  --studio-veil:
+    linear-gradient(90deg, rgba(12, 12, 12, 0.96) 0%, rgba(12, 12, 12, 0.78) 40%, rgba(12, 12, 12, 0.18) 100%),
+    radial-gradient(900px 280px at 20% 0%, rgba(122, 162, 255, 0.14), transparent 60%),
+    radial-gradient(700px 260px at 40% 90%, rgba(245, 158, 11, 0.10), transparent 55%);
+}
+
+/* Current / incoming experience shells — light defaults, dark overrides */
+.experience-shell-current {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.09) 0%,
+    rgba(255, 255, 255, 0.72) 52%,
+    rgba(209, 250, 229, 0.18) 100%
+  );
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  box-shadow:
+    0 10px 36px rgba(16, 185, 129, 0.14),
+    0 0 0 1px rgba(16, 185, 129, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+.experience-shell-incoming {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 91, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.55) 100%
+  );
+  border: 1.5px dashed rgba(15, 91, 255, 0.28);
+  box-shadow:
+    0 8px 28px rgba(15, 91, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+.experience-logo-current {
+  border-color: rgba(16, 185, 129, 0.22);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.1);
+}
+.experience-logo-incoming {
+  border-color: rgba(15, 91, 255, 0.2);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: none;
+}
+.experience-badge-current {
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.14);
+}
+.experience-badge-incoming {
+  color: #0a43bd;
+  border: 1px dashed rgba(15, 91, 255, 0.35);
+  background: rgba(15, 91, 255, 0.07);
+}
+
+html.dark .experience-shell-current {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.18) 0%,
+    rgba(28, 28, 28, 0.95) 48%,
+    rgba(16, 185, 129, 0.10) 100%
+  );
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  box-shadow:
+    0 10px 36px rgba(16, 185, 129, 0.12),
+    0 0 0 1px rgba(16, 185, 129, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+html.dark .experience-shell-incoming {
+  background: linear-gradient(
+    135deg,
+    rgba(122, 162, 255, 0.14) 0%,
+    rgba(28, 28, 28, 0.92) 100%
+  );
+  border: 1.5px dashed rgba(122, 162, 255, 0.35);
+  box-shadow:
+    0 8px 28px rgba(122, 162, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+html.dark .experience-logo-current,
+html.dark .experience-logo-incoming {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+html.dark .experience-logo-current {
+  border-color: rgba(52, 211, 153, 0.35);
+}
+html.dark .experience-logo-incoming {
+  border-color: rgba(122, 162, 255, 0.35);
+}
+html.dark .experience-badge-current {
+  color: #6ee7b7;
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(16, 185, 129, 0.18);
+}
+html.dark .experience-badge-incoming {
+  color: #a8c1ff;
+  border-color: rgba(122, 162, 255, 0.4);
+  background: rgba(122, 162, 255, 0.12);
+}
+
+html.dark .reading-shell {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.04'/%3E%3C/svg%3E"),
+    radial-gradient(1200px 600px at 20% -10%, rgba(122, 162, 255, 0.08), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(245, 158, 11, 0.06), transparent 55%),
+    var(--background);
+  background-size: 180px 180px, auto, auto, auto;
+}
+
+html.dark .section-heading,
+html.dark .section-heading-masthead {
+  text-shadow: none;
 }
 
 @theme inline {

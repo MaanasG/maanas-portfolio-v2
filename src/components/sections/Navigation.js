@@ -6,9 +6,12 @@ import {
   Pause,
   SkipForward,
   SkipBack,
-  Volume2,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { tracks } from "../../data/tracks.js";
+
+const THEME_STORAGE_KEY = "maanas-theme";
 
 const Navigation = ({
   isScrolled,
@@ -22,10 +25,27 @@ const Navigation = ({
   const [audio, setAudio] = useState(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isDark, setIsDark] = useState(false);
   const desktopScrollingTextRef = useRef(null);
   const mobileScrollingTextRef = useRef(null);
 
   const currentTrack = tracks[currentTrackIndex];
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const dark = stored === "dark" || (!stored && prefersDark);
+    root.classList.toggle("dark", dark);
+    setIsDark(dark);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
+    setIsDark(next);
+  };
 
   // Initialize audio
   useEffect(() => {
@@ -154,7 +174,7 @@ const Navigation = ({
         className="coolvetica-font fixed top-0 w-full z-50 transition-[background-color,border-color,backdrop-filter,-webkit-backdrop-filter] duration-300 ease-out"
         style={{
           borderBottom: isScrolled ? "1px solid var(--border)" : "1px solid transparent",
-          backgroundColor: isScrolled ? "rgba(251, 250, 247, 0.76)" : "rgba(251, 250, 247, 0.45)",
+          backgroundColor: isScrolled ? "var(--nav-bg-scrolled)" : "var(--nav-bg)",
           backdropFilter: isScrolled ? "blur(18px) saturate(1.4)" : "none",
           WebkitBackdropFilter: isScrolled ? "blur(18px) saturate(1.4)" : "none",
         }}
@@ -199,7 +219,8 @@ const Navigation = ({
                 <button
                   onClick={prevTrack}
                   className="p-2 rounded-full transition-colors"
-                  style={{ background: "rgba(0,0,0,0.04)", border: "1px solid var(--border)" }}
+                  style={{ background: "var(--control-bg)", border: "1px solid var(--border)" }}
+                  aria-label="Previous track"
                 >
                   <SkipBack
                     className="w-4 h-4"
@@ -209,7 +230,8 @@ const Navigation = ({
                 <button
                   onClick={toggleMusic}
                   className="p-2 sm:p-3 rounded-full transition-colors"
-                  style={{ background: "rgba(0,0,0,0.06)", border: "1px solid var(--border)" }}
+                  style={{ background: "var(--control-bg-strong)", border: "1px solid var(--border)" }}
+                  aria-label={isPlaying ? "Pause" : "Play"}
                 >
                   {isPlaying ? (
                     <Pause className="w-4 sm:w-5 h-4 sm:h-5" style={{ color: "var(--foreground)" }} />
@@ -220,7 +242,8 @@ const Navigation = ({
                 <button
                   onClick={nextTrack}
                   className="p-2 rounded-full transition-colors"
-                  style={{ background: "rgba(0,0,0,0.04)", border: "1px solid var(--border)" }}
+                  style={{ background: "var(--control-bg)", border: "1px solid var(--border)" }}
+                  aria-label="Next track"
                 >
                   <SkipForward
                     className="w-4 h-4"
@@ -228,13 +251,17 @@ const Navigation = ({
                   />
                 </button>
                 <button
+                  onClick={toggleTheme}
                   className="p-2 rounded-full transition-colors"
-                  style={{ background: "rgba(0,0,0,0.04)", border: "1px solid var(--border)" }}
+                  style={{ background: "var(--control-bg)", border: "1px solid var(--border)" }}
+                  aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                  title={isDark ? "Light mode" : "Dark mode"}
                 >
-                  <Volume2
-                    className="w-4 h-4"
-                    style={{ color: "var(--muted-foreground)" }}
-                  />
+                  {isDark ? (
+                    <Sun className="w-4 h-4" style={{ color: "var(--muted-foreground)" }} />
+                  ) : (
+                    <Moon className="w-4 h-4" style={{ color: "var(--muted-foreground)" }} />
+                  )}
                 </button>
               </div>
             </div>
@@ -264,7 +291,8 @@ const Navigation = ({
                   <button
                     onClick={prevTrack}
                     className="p-2 rounded-full transition-colors"
-                    style={{ background: "rgba(0,0,0,0.04)", border: "1px solid var(--border)" }}
+                    style={{ background: "var(--control-bg)", border: "1px solid var(--border)" }}
+                    aria-label="Previous track"
                   >
                     <SkipBack
                       className="w-4 h-4"
@@ -274,7 +302,8 @@ const Navigation = ({
                   <button
                     onClick={toggleMusic}
                     className="p-2 rounded-full transition-colors"
-                    style={{ background: "rgba(0,0,0,0.06)", border: "1px solid var(--border)" }}
+                    style={{ background: "var(--control-bg-strong)", border: "1px solid var(--border)" }}
+                    aria-label={isPlaying ? "Pause" : "Play"}
                   >
                     {isPlaying ? (
                       <Pause className="w-4 h-4" style={{ color: "var(--foreground)" }} />
@@ -285,12 +314,26 @@ const Navigation = ({
                   <button
                     onClick={nextTrack}
                     className="p-2 rounded-full transition-colors"
-                    style={{ background: "rgba(0,0,0,0.04)", border: "1px solid var(--border)" }}
+                    style={{ background: "var(--control-bg)", border: "1px solid var(--border)" }}
+                    aria-label="Next track"
                   >
                     <SkipForward
                       className="w-4 h-4"
                       style={{ color: "var(--muted-foreground)" }}
                     />
+                  </button>
+                  <button
+                    onClick={toggleTheme}
+                    className="p-2 rounded-full transition-colors"
+                    style={{ background: "var(--control-bg)", border: "1px solid var(--border)" }}
+                    aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                    title={isDark ? "Light mode" : "Dark mode"}
+                  >
+                    {isDark ? (
+                      <Sun className="w-4 h-4" style={{ color: "var(--muted-foreground)" }} />
+                    ) : (
+                      <Moon className="w-4 h-4" style={{ color: "var(--muted-foreground)" }} />
+                    )}
                   </button>
                 </div>
 
@@ -315,11 +358,11 @@ const Navigation = ({
             {/* Progress bar */}
             {duration > 0 && !mobileMenuOpen && (
               <div className="absolute bottom-0 left-0 w-full">
-                <div className="w-full h-1" style={{ background: "rgba(0,0,0,0.06)" }}>
+                <div className="w-full h-1" style={{ background: "var(--progress-track)" }}>
                   <div
                       className="h-1 rounded-full transition-all duration-100"
                     style={{
-                      background: "rgba(0,0,0,0.35)",
+                      background: "var(--progress-fill)",
                       width: `${(currentTime / duration) * 100}%`,
                     }}
                   />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ExternalLink, Music2 } from "lucide-react";
 import { spotifyTrackConfig, DEFAULT_ROLE } from "../../data/spotifyTracks";
 
@@ -11,7 +11,7 @@ function Cover({ src, alt, size = 56 }) {
     height: size,
     borderRadius: 14,
     border: "1px solid var(--border)",
-    background: "rgba(0,0,0,0.04)",
+    background: "var(--control-bg)",
     overflow: "hidden",
     flexShrink: 0,
   };
@@ -51,9 +51,14 @@ function formatNumberCompact(n) {
 }
 
 function resolveCreditLinks(credit) {
-  const spotifyUrl = credit.spotifyUrl || credit.spotify_url || credit.url;
-  const youtubeUrl = credit.youtubeUrl || credit.youtube_url;
-  const soundcloudUrl = credit.source === "soundcloud" ? (credit.url || credit.soundcloudUrl) : null;
+  const source = credit.source || "spotify";
+  const youtubeUrl = credit.youtubeUrl || credit.youtube_url || null;
+  const soundcloudUrl =
+    source === "soundcloud" ? credit.url || credit.soundcloudUrl || null : credit.soundcloudUrl || null;
+  const spotifyUrl =
+    source === "soundcloud"
+      ? credit.spotifyUrl || credit.spotify_url || null
+      : credit.spotifyUrl || credit.spotify_url || credit.url || null;
   return { spotifyUrl, youtubeUrl, soundcloudUrl };
 }
 
@@ -68,6 +73,8 @@ function normalizeTitle(s) {
 function findCreditByTitle(credits, query) {
   const q = normalizeTitle(query);
   if (!q) return null;
+  const exact = credits.find((c) => normalizeTitle(c.trackTitle) === q);
+  if (exact) return exact;
   return credits.find((c) => normalizeTitle(c.trackTitle).includes(q)) || null;
 }
 
@@ -84,7 +91,7 @@ const LinkPill = ({ href, children }) => (
       padding: "8px 10px",
       borderRadius: 999,
       border: "1px solid var(--border)",
-      background: "rgba(0,0,0,0.03)",
+      background: "var(--control-bg)",
     }}
   >
     <ExternalLink className="w-4 h-4" />
@@ -105,7 +112,7 @@ const PlatformLink = ({ href, platform }) => (
       padding: "7px 10px",
       borderRadius: 999,
       border: "1px solid var(--border)",
-      background: "rgba(0,0,0,0.03)",
+      background: "var(--control-bg)",
     }}
   >
     <ExternalLink className="w-4 h-4" />
@@ -117,7 +124,9 @@ const MusicSectionEditorial = () => {
   const [credits, setCredits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [featuredIdx, setFeaturedIdx] = useState(0);
-  const creditsRailRef = useRef(null);
+  const [creditsExpanded, setCreditsExpanded] = useState(false);
+
+  const CREDITS_PREVIEW = 3;
 
   useEffect(() => {
     let cancelled = false;
@@ -129,7 +138,11 @@ const MusicSectionEditorial = () => {
         try {
           const res = await fetch("/api/spotify-credits");
           const data = await res.json();
-          if (data?.credits?.length) apiCredits = data.credits;
+          if (data?.credits?.length) {
+            apiCredits = data.credits;
+          } else if (data?.error) {
+            console.warn("Spotify credits unavailable:", data.error);
+          }
         } catch {
           // ignore; we'll fall back to config-only
         }
@@ -164,9 +177,9 @@ const MusicSectionEditorial = () => {
             const id = parseSpotifyId(t.url);
             return !id || !seenSpotifyIds.has(id);
           })
-          .map((t) => ({
-            trackTitle: t.title,
-            artist: t.artist,
+          .map((t, index) => ({
+            trackTitle: t.title || t.trackTitle || `Track ${index + 1}`,
+            artist: t.artist || "1mains",
             year: t.year,
             role: t.role || DEFAULT_ROLE,
             description: t.description,
@@ -218,6 +231,17 @@ const MusicSectionEditorial = () => {
   const featuredTheyDontEvenKnow = useMemo(() => findCreditByTitle(credits, "they don't even know"), [credits]);
   const featuredHoldOn = useMemo(() => findCreditByTitle(credits, "hold on"), [credits]);
 
+  // Keep the list focused: hide tracks already called out in Featured.
+  const listCredits = useMemo(() => {
+    const featuredKeys = new Set(
+      [featuredTheyDontEvenKnow, featuredHoldOn]
+        .filter(Boolean)
+        .map((c) => normalizeTitle(c.trackTitle))
+    );
+    if (featuredKeys.size === 0) return credits;
+    return credits.filter((c) => !featuredKeys.has(normalizeTitle(c.trackTitle)));
+  }, [credits, featuredTheyDontEvenKnow, featuredHoldOn]);
+
   return (
     <section id="music" className="px-4 sm:px-6 py-7 sm:py-8">
       <div className="reading-container">
@@ -252,7 +276,7 @@ const MusicSectionEditorial = () => {
                     <div
                       key={`${t.trackTitle}-${t.spotifyUrl || t.url || ""}`}
                       className="rounded-2xl border p-4 sm:p-5"
-                      style={{ borderColor: "var(--border)", background: "rgba(255,255,255,0.55)" }}
+                      style={{ borderColor: "var(--border)", background: "var(--surface)" }}
                     >
                       <div className="flex items-start gap-3">
                         <Cover src={t.imageUrl} alt={`${t.trackTitle} cover`} size={64} />
@@ -327,7 +351,7 @@ const MusicSectionEditorial = () => {
               <div>
                 <div
                   className="rounded-2xl border px-3 py-3"
-                  style={{ borderColor: "var(--border)", background: "rgba(0,0,0,0.03)", fontFamily: "var(--font-geist-sans)" }}
+                  style={{ borderColor: "var(--border)", background: "var(--control-bg)", fontFamily: "var(--font-geist-sans)" }}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 text-sm font-medium">
@@ -355,7 +379,7 @@ const MusicSectionEditorial = () => {
                           className="w-full text-left rounded-xl border px-2.5 py-2 transition-colors"
                           style={{
                             borderColor: "var(--border)",
-                            background: idx === featuredIdx ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.30)",
+                            background: idx === featuredIdx ? "var(--control-bg-strong)" : "var(--surface-muted)",
                             color: "var(--foreground)",
                           }}
                         >
@@ -382,80 +406,101 @@ const MusicSectionEditorial = () => {
           )}
         </div>
 
-        {/* Credits list */}
-        {!loading && credits.length > 0 && (
+        {/* Credits list — stacked liner notes, collapsible */}
+        {!loading && listCredits.length > 0 && (
           <div className="mb-5">
-            <div className="relative">
-              {/* subtle edge fades */}
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <div className="section-title-block">
+                <div className="kicker">Credits</div>
+              </div>
               <div
-                className="pointer-events-none absolute left-0 top-0 bottom-0 w-10"
-                style={{ background: "linear-gradient(to right, var(--background), rgba(251,250,247,0))" }}
-              />
-              <div
-                className="pointer-events-none absolute right-0 top-0 bottom-0 w-10"
-                style={{ background: "linear-gradient(to left, var(--background), rgba(251,250,247,0))" }}
-              />
-
-              <div
-                ref={creditsRailRef}
-                className="flex gap-3 overflow-x-auto pb-3 hide-scrollbar"
-                style={{
-                  scrollSnapType: "x mandatory",
-                  WebkitOverflowScrolling: "touch",
-                }}
+                className="text-xs"
+                style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
               >
-                {credits.map((c, idx) => {
-                  const links = resolveCreditLinks(c);
-                  return (
-                    <article
-                      key={`${c.trackTitle}-${idx}`}
-                      className="shrink-0 rounded-2xl border"
-                      style={{
-                        width: 260,
-                        minHeight: 238,
-                        scrollSnapAlign: "start",
-                        borderColor: "var(--border)",
-                        background: "rgba(255,255,255,0.55)",
-                      }}
-                    >
-                      <div className="p-4 flex flex-col h-full">
-                        <div className="flex items-start gap-3">
-                          <Cover src={c.imageUrl} alt={`${c.trackTitle} cover`} size={56} />
-                          <div className="min-w-0 flex-1">
-                            <div className="section-heading text-base font-semibold leading-snug truncate">
-                              {c.trackTitle}
-                            </div>
-                            <div
-                              className="text-xs mt-1 truncate"
-                              style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
-                            >
-                              {c.artist ? `${c.artist} • ` : ""}{c.year || "—"}
-                            </div>
-                            <div
-                              className="text-xs truncate"
-                              style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
-                            >
-                              {c.role || DEFAULT_ROLE}{c.customGenre ? ` • ${c.customGenre}` : ""}
-                            </div>
+                {listCredits.length} tracks
+              </div>
+            </div>
+
+            <div
+              className="rounded-2xl border overflow-hidden"
+              style={{ borderColor: "var(--border)", background: "var(--surface-muted)" }}
+            >
+              {(creditsExpanded ? listCredits : listCredits.slice(0, CREDITS_PREVIEW)).map((c, idx) => {
+                const links = resolveCreditLinks(c);
+                const streams = formatNumberCompact(c.plays);
+                return (
+                  <article
+                    key={`${c.trackTitle}-${idx}`}
+                    className="p-4 sm:p-5"
+                    style={{
+                      borderTop: idx === 0 ? "none" : "1px solid var(--border)",
+                    }}
+                  >
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <Cover src={c.imageUrl} alt={`${c.trackTitle} cover`} size={56} />
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                          <div className="section-heading text-base sm:text-lg font-semibold leading-snug">
+                            {c.trackTitle}
+                          </div>
+                          <div
+                            className="text-xs shrink-0"
+                            style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
+                          >
+                            {c.year || "—"}
+                            {streams ? ` · ${streams} streams` : ""}
                           </div>
                         </div>
 
+                        <div
+                          className="mt-1 text-sm"
+                          style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
+                        >
+                          {c.artist ? `${c.artist} · ` : ""}
+                          {c.role || DEFAULT_ROLE}
+                          {c.customGenre ? ` · ${c.customGenre}` : ""}
+                        </div>
+
                         {c.description && (
-                          <p className="mt-3 text-[13px] leading-relaxed line-clamp-3" style={{ color: "var(--muted-foreground)" }}>
+                          <p className="mt-2 text-[14px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
                             {c.description}
                           </p>
                         )}
 
-                        <div className="mt-auto pt-3 flex flex-wrap items-center gap-2 justify-start">
+                        <div className="mt-3 flex flex-wrap items-center gap-2">
                           {links.spotifyUrl && <PlatformLink href={links.spotifyUrl} platform="Spotify" />}
                           {links.soundcloudUrl && <PlatformLink href={links.soundcloudUrl} platform="SoundCloud" />}
                           {links.youtubeUrl && <PlatformLink href={links.youtubeUrl} platform="YouTube" />}
                         </div>
                       </div>
-                    </article>
-                  );
-                })}
-              </div>
+                    </div>
+                  </article>
+                );
+              })}
+
+              {listCredits.length > CREDITS_PREVIEW && (
+                <div
+                  className="px-4 sm:px-5 py-3"
+                  style={{ borderTop: "1px solid var(--border)" }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setCreditsExpanded((v) => !v)}
+                    className="text-sm underline"
+                    style={{
+                      fontFamily: "var(--font-geist-sans)",
+                      color: "var(--muted-foreground)",
+                      textUnderlineOffset: 3,
+                    }}
+                    aria-expanded={creditsExpanded}
+                  >
+                    {creditsExpanded
+                      ? "Show less"
+                      : `Show ${listCredits.length - CREDITS_PREVIEW} more`}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -464,7 +509,7 @@ const MusicSectionEditorial = () => {
         <div>
           <div
             className="group rounded-3xl border overflow-hidden"
-            style={{ borderColor: "var(--border)", background: "rgba(255,255,255,0.35)" }}
+            style={{ borderColor: "var(--border)", background: "var(--surface-muted)" }}
           >
             <div className="relative isolate">
               {/* Dedicated clip layer: filtered backgrounds ignore parent radius in some engines */}
@@ -481,12 +526,7 @@ const MusicSectionEditorial = () => {
                 />
                 <div
                   className="absolute inset-0 rounded-3xl transition-opacity duration-500 ease-out group-hover:opacity-0"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, rgba(251,250,247,0.96) 0%, rgba(251,250,247,0.72) 40%, rgba(251,250,247,0.10) 100%)," +
-                      "radial-gradient(900px 280px at 20% 0%, rgba(15,91,255,0.10), transparent 60%)," +
-                      "radial-gradient(700px 260px at 40% 90%, rgba(245,158,11,0.12), transparent 55%)",
-                  }}
+                  style={{ background: "var(--studio-veil)" }}
                 />
               </div>
 
@@ -506,7 +546,7 @@ const MusicSectionEditorial = () => {
                       href="https://mains.live/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm rounded-full border px-3 py-2 transition-[color,background-color,border-color,box-shadow,transform] duration-200 border-[var(--border)] bg-black/[0.03] !text-[var(--muted-foreground)] no-underline hover:no-underline group-hover:border-white/25 group-hover:bg-white/10 group-hover:!text-white/95 hover:!border-amber-400/55 hover:!bg-amber-500/15 hover:!text-amber-200 hover:shadow-[0_0_22px_rgba(245,158,11,0.55),0_0_48px_rgba(251,191,36,0.28),inset_0_0_20px_rgba(254,243,199,0.12)] hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400/80 active:scale-[0.99]"
+                      className="inline-flex items-center gap-2 text-sm rounded-full border px-3 py-2 transition-[color,background-color,border-color,box-shadow,transform] duration-200 border-[var(--border)] bg-[var(--control-bg)] !text-[var(--muted-foreground)] no-underline hover:no-underline group-hover:border-white/25 group-hover:bg-white/10 group-hover:!text-white/95 hover:!border-amber-400/55 hover:!bg-amber-500/15 hover:!text-amber-200 hover:shadow-[0_0_22px_rgba(245,158,11,0.55),0_0_48px_rgba(251,191,36,0.28),inset_0_0_20px_rgba(254,243,199,0.12)] hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400/80 active:scale-[0.99]"
                     >
                       <ExternalLink className="w-4 h-4 shrink-0" />
                       Visit mains.live

@@ -15,8 +15,8 @@ const ExperienceSection = () => (
       <div
         className="divide-y divide-black/[0.07]"
         style={{
-          borderTop: "1px solid rgba(0,0,0,0.07)",
-          borderBottom: "1px solid rgba(0,0,0,0.07)",
+          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
         }}
       >
         {experiences.map((exp, index) => (

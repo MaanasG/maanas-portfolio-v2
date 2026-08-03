@@ -3,12 +3,14 @@ export const experiences = [
     title: "Software Engineering Intern",
     company: "OnePay",
     location: "New York City, NY",
-    period: "Summer 2026",
-    incoming: true,
+    period: "June 2026 — Present",
+    current: true,
     highlights: [
-      "Payment processing & customer-platform on Servicing & Marketing"
+      "Architecting Ethereum staking (stake, delegate, yield, unstake) for a 2M-user crypto platform",
+      "Functional-typed TypeScript/fp-ts backend publishing staking lifecycle events to Kafka, integrated with wallet & banking services",
+      "Building the React Native frontend for the end-to-end staking experience"
     ],
-    tech: [],
+    tech: ["TypeScript", "fp-ts", "Kafka", "React Native"],
     color: "from-amber-400 to-yellow-500",
     logo: "/logos/onepay.png"
   },
@@ -16,14 +18,13 @@ export const experiences = [
     title: "Software Engineering Intern",
     company: "IBM",
     location: "Baton Rouge, LA",
-    period: "May 2026 — Present",
-    current: true,
+    period: "May 2026 — June 2026",
     highlights: [
-      "CI/CD automation for Oracle WebLogic deploys",
-      "HPC telemetry for real-time cluster & job health",
-      "Dashboards & analytics for compute workload bottlenecks"
+      "Settlement-risk pattern analysis in Python across 100+ counterparties & securities",
+      "Weighted risk-scoring model with 2–3x lift over baseline heuristics vs. historical fail data",
+      "Unified fail queue, exception log & reconciliation pipeline — cut manual triage 10–25% in pilots"
     ],
-    tech: ["Python", "Bash", "CI/CD", "Oracle WebLogic"],
+    tech: ["Python"],
     color: "from-amber-400 to-yellow-500",
     logo: "/logos/ibm.png"
   },

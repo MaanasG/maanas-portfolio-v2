@@ -14,63 +14,36 @@ function getExperienceStatus(experience) {
   return null;
 }
 
-const STATUS_CONFIG = {
+const STATUS_META = {
   current: {
     label: "Now",
-    shell: {
-      background:
-        "linear-gradient(135deg, rgba(16, 185, 129, 0.09) 0%, rgba(255, 255, 255, 0.72) 52%, rgba(209, 250, 229, 0.18) 100%)",
-      border: "1px solid rgba(16, 185, 129, 0.28)",
-      boxShadow:
-        "0 10px 36px rgba(16, 185, 129, 0.14), 0 0 0 1px rgba(16, 185, 129, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.65)",
-    },
+    shellClass: "experience-shell-current",
+    logoClass: "experience-logo-current",
+    badgeClass: "experience-badge-current",
     accentBar: "linear-gradient(180deg, rgba(16, 185, 129, 0.85), rgba(52, 211, 153, 0.45))",
-    badge: {
-      color: "#047857",
-      border: "1px solid rgba(16, 185, 129, 0.35)",
-      background: "rgba(16, 185, 129, 0.14)",
-    },
-    logoFrame: {
-      borderColor: "rgba(16, 185, 129, 0.22)",
-      background: "rgba(255, 255, 255, 0.72)",
-      boxShadow: "0 4px 14px rgba(16, 185, 129, 0.1)",
-    },
     marker: "rgba(16, 185, 129, 0.85)",
   },
   incoming: {
     label: "Up next",
-    shell: {
-      background:
-        "linear-gradient(135deg, rgba(15, 91, 255, 0.05) 0%, rgba(255, 255, 255, 0.55) 100%)",
-      border: "1.5px dashed rgba(15, 91, 255, 0.28)",
-      boxShadow: "0 8px 28px rgba(15, 91, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55)",
-    },
+    shellClass: "experience-shell-incoming",
+    logoClass: "experience-logo-incoming",
+    badgeClass: "experience-badge-incoming",
     accentBar: "linear-gradient(180deg, rgba(15, 91, 255, 0.55), rgba(15, 91, 255, 0.18))",
-    badge: {
-      color: "#0a43bd",
-      border: "1px dashed rgba(15, 91, 255, 0.35)",
-      background: "rgba(15, 91, 255, 0.07)",
-    },
-    logoFrame: {
-      borderColor: "rgba(15, 91, 255, 0.2)",
-      background: "rgba(255, 255, 255, 0.62)",
-      boxShadow: "none",
-    },
+    marker: "rgba(15, 91, 255, 0.55)",
   },
 };
 
 const StatusBadge = ({ status }) => {
-  const config = STATUS_CONFIG[status];
+  const config = STATUS_META[status];
   if (!config) return null;
 
   return (
     <span
-      className="text-[10px] sm:text-xs uppercase tracking-wide px-1.5 py-0.5 rounded"
+      className={`text-[10px] sm:text-xs uppercase tracking-wide px-1.5 py-0.5 rounded ${config.badgeClass}`}
       style={{
         fontFamily: "var(--font-geist-sans)",
         fontWeight: 600,
         letterSpacing: "0.08em",
-        ...config.badge,
       }}
     >
       {config.label}
@@ -83,7 +56,7 @@ const TimelineMarker = ({ status, accent }) => {
     return (
       <div
         className="experience-marker-current w-2.5 h-2.5 rounded-full"
-        style={{ background: STATUS_CONFIG.current.marker }}
+        style={{ background: STATUS_META.current.marker }}
         aria-hidden="true"
       />
     );
@@ -95,7 +68,7 @@ const TimelineMarker = ({ status, accent }) => {
         className="w-2.5 h-2.5 rounded-full border-2 border-dashed"
         style={{
           borderColor: "rgba(15, 91, 255, 0.45)",
-          background: "rgba(255, 255, 255, 0.85)",
+          background: "var(--surface)",
           boxShadow: "0 0 0 6px rgba(15, 91, 255, 0.06)",
         }}
         aria-hidden="true"
@@ -106,7 +79,7 @@ const TimelineMarker = ({ status, accent }) => {
   return (
     <div
       className="w-2.5 h-2.5 rounded-full"
-      style={{ background: accent, boxShadow: "0 0 0 6px rgba(0,0,0,0.03)" }}
+      style={{ background: accent, boxShadow: "0 0 0 6px var(--control-bg)" }}
       aria-hidden="true"
     />
   );
@@ -116,7 +89,7 @@ const ExperienceCard = ({ experience }) => {
   const [expanded, setExpanded] = useState(false);
   const accent = useMemo(() => accentFromGradientToken(experience.color), [experience.color]);
   const status = getExperienceStatus(experience);
-  const statusConfig = status ? STATUS_CONFIG[status] : null;
+  const statusConfig = status ? STATUS_META[status] : null;
 
   const highlights = Array.isArray(experience.highlights) ? experience.highlights : [];
   const visibleHighlights = expanded ? highlights : highlights.slice(0, 2);
@@ -128,11 +101,13 @@ const ExperienceCard = ({ experience }) => {
     <>
       {experience.logo && (
         <div
-          className="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl border shrink-0"
+          className={`hidden sm:flex items-center justify-center w-12 h-12 rounded-xl border shrink-0 ${
+            statusConfig ? statusConfig.logoClass : ""
+          }`}
           style={
             statusConfig
-              ? statusConfig.logoFrame
-              : { borderColor: "var(--border)", background: "rgba(0,0,0,0.03)" }
+              ? undefined
+              : { borderColor: "var(--border)", background: "var(--control-bg)" }
           }
         >
           <img
@@ -210,7 +185,7 @@ const ExperienceCard = ({ experience }) => {
                   style={{
                     fontFamily: "var(--font-geist-sans)",
                     color: "var(--muted-foreground)",
-                    borderBottom: "1px solid rgba(0,0,0,0.10)",
+                    borderBottom: "1px solid var(--hairline)",
                   }}
                 >
                   {t}
@@ -240,8 +215,7 @@ const ExperienceCard = ({ experience }) => {
 
         {statusConfig ? (
           <div
-            className="relative min-w-0 flex-1 flex items-start gap-4 rounded-2xl px-3 py-3 sm:px-4 sm:py-4 overflow-hidden"
-            style={statusConfig.shell}
+            className={`relative min-w-0 flex-1 flex items-start gap-4 rounded-2xl px-3 py-3 sm:px-4 sm:py-4 overflow-hidden ${statusConfig.shellClass}`}
           >
             <div
               className="absolute left-0 top-3 bottom-3 w-1 rounded-full"

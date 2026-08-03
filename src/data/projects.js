@@ -1,6 +1,25 @@
 export const projects = [
     {
-      title: "Soundforge",
+      title: "CS2 Trade-Up Optimizer",
+      period: "Aug. 2026 — Present",
+      description: "Ingests CSFloat market listings, models Counter-Strike trade-up contracts, and searches for positive-EV combinations under budget and risk constraints.",
+      impact: "Live EV search across CSFloat listings",
+      tech: ["Python", "FastAPI", "PostgreSQL", "TypeScript"],
+      github: "https://github.com/MaanasG/cs2-tradeup-optimizer",
+      demo: "https://cs2-tradeup-optimizer.vercel.app",
+      category: "fullstack"
+    },
+    {
+      title: "Polymarket Market Maker",
+      period: "Aug. 2026 — Present",
+      description: "Paper-trading market maker for Polymarket prediction markets — live order books, edge detection, simulated execution, and portfolio PnL tracking.",
+      impact: "Sharpe 0.80 on 7-day replay ($1.7K PnL)",
+      tech: ["Python", "FastAPI", "PostgreSQL", "Redis"],
+      github: "https://github.com/MaanasG/polymarketmaker",
+      category: "automation"
+    },
+    {
+      title: "Soundforge (1Mains Audio Platform)",
       period: "January 2025 — Present",
       description: " AI-powered sound design tool for music producers that takes user audio samples and natural language descriptors to generate transformed sounds.",
       impact: "7M+ collective views",
