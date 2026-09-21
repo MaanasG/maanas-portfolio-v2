@@ -167,6 +167,9 @@ const MusicSectionEditorial = () => {
             source: config?.source || credit.source || "spotify",
             spotifyUrl: credit.spotifyUrl,
             imageUrl: config?.imageUrl || credit.imageUrl,
+            featured: config?.featured === true || credit.featured === true,
+            editorials: config?.editorials || credit.editorials,
+            label: config?.label || credit.label,
           };
         });
 
@@ -190,6 +193,9 @@ const MusicSectionEditorial = () => {
             spotifyUrl: t.source === "spotify" ? t.url : null,
             url: t.source === "soundcloud" ? t.url : null,
             imageUrl: t.imageUrl,
+            featured: t.featured === true,
+            editorials: t.editorials,
+            label: t.label,
           }));
 
         const all = [...merged, ...configOnly].filter((c) => c.trackTitle);
@@ -228,19 +234,15 @@ const MusicSectionEditorial = () => {
   const featured = credits[featuredIdx] || null;
   const featuredLinks = featured ? resolveCreditLinks(featured) : null;
 
-  const featuredTheyDontEvenKnow = useMemo(() => findCreditByTitle(credits, "they don't even know"), [credits]);
-  const featuredHoldOn = useMemo(() => findCreditByTitle(credits, "hold on"), [credits]);
+  const featuredLostInYou = useMemo(() => findCreditByTitle(credits, "lost in you"), [credits]);
+  const featuredLostInYouLinks = featuredLostInYou ? resolveCreditLinks(featuredLostInYou) : null;
 
   // Keep the list focused: hide tracks already called out in Featured.
   const listCredits = useMemo(() => {
-    const featuredKeys = new Set(
-      [featuredTheyDontEvenKnow, featuredHoldOn]
-        .filter(Boolean)
-        .map((c) => normalizeTitle(c.trackTitle))
-    );
-    if (featuredKeys.size === 0) return credits;
-    return credits.filter((c) => !featuredKeys.has(normalizeTitle(c.trackTitle)));
-  }, [credits, featuredTheyDontEvenKnow, featuredHoldOn]);
+    if (!featuredLostInYou) return credits;
+    const featuredKey = normalizeTitle(featuredLostInYou.trackTitle);
+    return credits.filter((c) => normalizeTitle(c.trackTitle) !== featuredKey);
+  }, [credits, featuredLostInYou]);
 
   return (
     <section id="music" className="px-4 sm:px-6 py-7 sm:py-8">
@@ -264,50 +266,95 @@ const MusicSectionEditorial = () => {
             <div style={{ fontFamily: "var(--font-geist-sans)", color: "var(--muted-foreground)" }}>
               Loading credits…
             </div>
-          ) : featuredTheyDontEvenKnow || featuredHoldOn ? (
+          ) : featuredLostInYou ? (
             <div>
               <div className="section-title-block mb-3">
                 <div className="kicker">Featured</div>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[featuredTheyDontEvenKnow, featuredHoldOn].filter(Boolean).map((t) => {
-                  const links = resolveCreditLinks(t);
-                  return (
+
+              <div className="flex items-start gap-3 sm:gap-4">
+                <Cover src={featuredLostInYou.imageUrl} alt={`${featuredLostInYou.trackTitle} cover`} size={88} />
+                <div className="min-w-0 flex-1">
+                  <div className="section-heading text-xl sm:text-2xl font-semibold leading-snug">
+                    {featuredLostInYou.trackTitle}
+                  </div>
+                  <div
+                    className="mt-1 text-sm"
+                    style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
+                  >
+                    {featuredLostInYou.artist ? `${featuredLostInYou.artist} • ` : ""}
+                    {featuredLostInYou.year || "—"} • {featuredLostInYou.role || DEFAULT_ROLE}
+                    {featuredLostInYou.plays ? ` • ${formatNumberCompact(featuredLostInYou.plays)} streams` : ""}
+                  </div>
+                  {featuredLostInYou.label && (
                     <div
-                      key={`${t.trackTitle}-${t.spotifyUrl || t.url || ""}`}
-                      className="rounded-2xl border p-4 sm:p-5"
-                      style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+                      className="mt-1 text-sm"
+                      style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
                     >
-                      <div className="flex items-start gap-3">
-                        <Cover src={t.imageUrl} alt={`${t.trackTitle} cover`} size={64} />
-                        <div className="min-w-0 flex-1">
-                          <div className="section-heading text-lg font-semibold leading-snug">
-                            {t.trackTitle}
-                          </div>
-                          <div
-                            className="mt-1 text-sm"
-                            style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
-                          >
-                            {t.artist ? `${t.artist} • ` : ""}{t.year || "—"} • {t.role || DEFAULT_ROLE}
-                            {t.plays ? ` • ${formatNumberCompact(t.plays)} streams` : ""}
-                          </div>
-                        </div>
-                      </div>
-
-                      {t.description && (
-                        <p className="mt-3 text-[14px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-                          {t.description}
-                        </p>
-                      )}
-
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {links.spotifyUrl && <LinkPill href={links.spotifyUrl}>Spotify</LinkPill>}
-                        {links.soundcloudUrl && <LinkPill href={links.soundcloudUrl}>SoundCloud</LinkPill>}
-                        {links.youtubeUrl && <LinkPill href={links.youtubeUrl}>YouTube</LinkPill>}
-                      </div>
+                      {featuredLostInYou.label}
+                      {featuredLostInYou.customGenre ? ` • ${featuredLostInYou.customGenre}` : ""}
                     </div>
-                  );
-                })}
+                  )}
+                </div>
+              </div>
+
+              {featuredLostInYou.description && (
+                <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
+                  {featuredLostInYou.description}
+                </p>
+              )}
+
+              {featuredLostInYou.editorials?.length > 0 && (
+                <div className="mt-4">
+                  <div
+                    className="mb-2 text-xs"
+                    style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-geist-sans)" }}
+                  >
+                    Spotify editorials
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {featuredLostInYou.editorials.map((editorial) => (
+                      <a
+                        key={editorial.name}
+                        href={editorial.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-2xl border p-3 sm:p-4 no-underline hover:no-underline"
+                        style={{
+                          borderColor: "var(--border)",
+                          background: "var(--surface)",
+                          color: "var(--foreground)",
+                          fontFamily: "var(--font-geist-sans)",
+                        }}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Music2 className="w-4 h-4 shrink-0" />
+                            <div className="min-w-0">
+                              <div className="text-sm font-medium leading-snug">{editorial.name}</div>
+                              <div className="text-xs mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                                Spotify editorial
+                              </div>
+                            </div>
+                          </div>
+                          <ExternalLink className="w-4 h-4 shrink-0" style={{ color: "var(--muted-foreground)" }} />
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {featuredLostInYouLinks?.spotifyUrl && (
+                  <LinkPill href={featuredLostInYouLinks.spotifyUrl}>Spotify</LinkPill>
+                )}
+                {featuredLostInYouLinks?.soundcloudUrl && (
+                  <LinkPill href={featuredLostInYouLinks.soundcloudUrl}>SoundCloud</LinkPill>
+                )}
+                {featuredLostInYouLinks?.youtubeUrl && (
+                  <LinkPill href={featuredLostInYouLinks.youtubeUrl}>YouTube</LinkPill>
+                )}
               </div>
             </div>
           ) : featured ? (

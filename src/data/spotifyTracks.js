@@ -4,6 +4,32 @@
 
 export const spotifyTrackConfig = [
   {
+    title: "LOST IN YOU",
+    artist: "Leondis, Subarctic",
+    year: "2026",
+    url: "https://open.spotify.com/track/5t8DLZqVZl27BgMqnZfPEc",
+    role: "Producer",
+    customGenre: "Progressive House",
+    description:
+      "Helped produce this Lost In Dreams single — recently placed on Spotify’s EDM 2026 and All New Dance editorials.",
+    source: "spotify",
+    plays: "42524",
+    youtubeUrl: "https://www.youtube.com/watch?v=LQmY4-aNJtQ",
+    imageUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0285c366cb1023893375c23680",
+    label: "Lost In Dreams",
+    featured: true,
+    editorials: [
+      {
+        name: "EDM 2026",
+        url: "https://open.spotify.com/playlist/37i9dQZF1DX1kCIzMYtzum",
+      },
+      {
+        name: "All New Dance",
+        url: "https://open.spotify.com/playlist/37i9dQZF1DXa41CMuUARjl",
+      },
+    ],
+  },
+  {
     title: "AWAKENESE",
     artist: "Lil Darkie, CHRIST DILLINGER",
     year: "2022",
