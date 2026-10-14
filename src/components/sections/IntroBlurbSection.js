@@ -112,7 +112,7 @@ const IntroBlurbSection = () => (
             className="text-[15px] sm:text-base leading-relaxed max-w-xl"
             style={{ color: "var(--muted-foreground)" }}
           >
-            Welcome! I'm a junior @ UMD studying CS + Econ + Philosophy. As a CS major, my interests
+            Welcome! I'm a senior @ UMD studying CS + Econ + Philosophy. As a CS major, my interests
             lie in developer infra, backend eng, machine learning, and fintech applications. When I'm not coding, 
             you might catch me making music or reading Hieronymi/Kant!
           </p>
